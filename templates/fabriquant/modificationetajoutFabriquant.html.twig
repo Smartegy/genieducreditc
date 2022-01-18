@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modification du fabriquant{% endblock %}
+{% block PageTitle %}
+{% if isModification%}
+Modification du fabriquant  {{fabriquants.nom}}
+{% else %}
+Ajout d'un fabriquant
+{% endif %}
+{% endblock %}
+{% block body %}
+<div class="row">
+<!--begin::Col-->
+									<div class="card mb-5 mb-xxl-8">
+										{{ form_start(form, {'attr': {'class':'row'} 
+                                       }
+    
+) }}
+
+   
+                        <div class="col-sm-4">
+                                            {{ form_row(form.actifcrm, {"label":"Actif - CRM"}) }}
+                                            </div>
+                                            <div class="col-sm-4">
+                                            
+                                            {{ form_row(form.actifservice, {"label":"Actif - Page Services"}) }}
+                        </div>
+                        <div class="col-sm-4">
+
+                                          
+                                            {{ form_row(form.actifaccueil, {"label":"Actif - Page d'accueil"}) }}
+                        </div>
+                               
+											{{ form_row(form.nom)}}
+                                            {{ form_row(form.lien)}}
+                                            {{ form_row(form.description)}}
+
+                                            {{ form_row(form.media, {"label":"Ajouter le logo"})}}
+                                            
+											
+ 										<input type="submit" class="btn btn-primary" value="Appliquer">
+									
+										{{form_end(form)}}
+
+											</div>
+									<!--end::Col-->
+</div>
+{% endblock %}
