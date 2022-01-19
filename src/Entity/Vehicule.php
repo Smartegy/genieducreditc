@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\VehiculeRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -451,16 +452,17 @@ class Vehicule
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $description;
+    private $carproof;
 
     /**
      * @ORM\ManyToOne(targetEntity=Concessionnaire::class, inversedBy="vehicules")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $concessionnaire;
 
     /**
      * @ORM\ManyToOne(targetEntity=Partenaire::class, inversedBy="vehicules")
+     * @ORM\JoinColumn(nullable=true)
      */
     private $partenaire;
 
@@ -473,6 +475,16 @@ class Vehicule
      * @ORM\Column(type="date")
      */
     private $datemodification;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $Sigeschauffants;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $volantajustable;
 
     public function getId(): ?int
     {
@@ -1488,14 +1500,14 @@ class Vehicule
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getCarproof(): ?string
     {
-        return $this->description;
+        return $this->carproof;
     }
 
-    public function setDescription(?string $description): self
+    public function setcarproof(?string $carproof): self
     {
-        $this->description = $description;
+        $this->carproof = $carproof;
 
         return $this;
     }
@@ -1546,5 +1558,37 @@ class Vehicule
         $this->datemodification = $datemodification;
 
         return $this;
+    }
+
+    public function getSigeschauffants(): ?bool
+    {
+        return $this->Sigeschauffants;
+    }
+
+    public function setSigeschauffants(?bool $Sigeschauffants): self
+    {
+        $this->Sigeschauffants = $Sigeschauffants;
+
+        return $this;
+    }
+
+    public function getVolantajustable(): ?bool
+    {
+        return $this->volantajustable;
+    }
+
+    public function setVolantajustable(?bool $volantajustable): self
+    {
+        $this->volantajustable = $volantajustable;
+
+        return $this;
+    }
+    public function __construct()
+    {
+        if($this->datecreation == null){
+            $this->datecreation = new DateTime('now');
+        }
+        
+        $this->datemodification = new DateTime('now');
     }
 }

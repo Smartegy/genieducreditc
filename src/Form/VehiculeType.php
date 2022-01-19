@@ -21,6 +21,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class VehiculeType extends AbstractType
 {
@@ -69,6 +70,7 @@ class VehiculeType extends AbstractType
             ->add('ouverturesducoffreadistance')
             ->add('pharesxenon')
             ->add('regulateurdevistesse')
+            ->add('Sigeschauffants')
             ->add('siegechauffantconducteur')
             ->add('siegesarrierestraversables')
             ->add('siegescuire')
@@ -95,13 +97,19 @@ class VehiculeType extends AbstractType
             ->add('systemeantivol')
             ->add('systemesurveillancepressiondespneus')
             ->add('toitouvrant')
+            ->add('volantajustable')
             ->add('disponiblefinance')
-            ->add('financement')
+          
+            ->add('financement', TextareaType::class, [
+                'attr' => ['class' => 'tinymce'],
+            ])
             ->add('disponiblegarentie')
-            ->add('garentie')
-            ->add('description')
-            ->add('datecreation')
-            ->add('datemodification')
+           
+            ->add('garentie', TextareaType::class, [
+                'attr' => ['class' => 'tinymce'],
+            ])
+            ->add('carproof')
+           
             ->add('marque',EntityType::class,[
                 'class' => Fabriquant::class,
                 'choice_label' => function ($marq) {
@@ -127,17 +135,13 @@ class VehiculeType extends AbstractType
   
             ))
        
-            ->add('status',EntityType::class,[
+            ->add('status',EntityType::class,array(
                 'class' => Status::class,
-                'choice_label' => function ($stat) {
-               
-                 
-                   return $stat->getStatus();
-                },
-                'expanded' => false
+                'choice_label' => 'nom',
+            
                 
-            ])
-         
+  
+            ))
           
 
             ->add('carrosserie',EntityType::class,array(
@@ -184,16 +188,12 @@ class VehiculeType extends AbstractType
 
             ->add('media', MediasType::class)
         
-            ->add('conditions',EntityType::class,[
+            
+            ->add('conditions',EntityType::class,array(
                 'class' => Condition::class,
-                'choice_label' => function ($con) {
-             
-                 
-                   return $con->getConditions();
-                },
-                'expanded' => false
-                
-            ])
+                'choice_label' => 'nom',
+  
+            ))
            
             ->add('concessionnaire',EntityType::class,[
                 'class' => Concessionnaire::class,
