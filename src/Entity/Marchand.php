@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\MarchandRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,6 +25,16 @@ class Marchand
      */
     private $Concessionnairemarchand;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Vehicule::class, mappedBy="marchand")
+     */
+    private $vehicules;
+
+    public function __construct()
+    {
+        $this->vehicules = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -39,4 +51,6 @@ class Marchand
 
         return $this;
     }
+
+  
 }

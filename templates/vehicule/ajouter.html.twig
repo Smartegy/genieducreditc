@@ -410,25 +410,11 @@ d'un partenaire{% endblock %}
 													{{ form_widget(form.conditions, {'attr': {'class': 'form-control form-control-lg form-control-solid'}}) }}
 												</div>
 											</div>
-											<div class="col mb-4">
-												
-												{{ form_label(form.concessionnaire, "Concessionnaire :", {'label_attr': {'class':"col-lg-6 col-form-label  fw-bold fs-6"}}) }}
-												
-												<div class="col-lg-8 fv-row fv-plugins-icon-container">
-													{{ form_widget(form.concessionnaire, {'attr': {'class': 'form-control form-control-lg form-control-solid'}}) }}
-												</div>
-											</div>
+											
 
 											
 							</div>
-							<div class="col mb-4">
-												
-								{{ form_label(form.partenaire, "Partenaire :", {'label_attr': {'class':"col-lg-6 col-form-label  fw-bold fs-6"}}) }}
-								
-								<div class="col-lg-8 fv-row fv-plugins-icon-container">
-									{{ form_widget(form.partenaire, {'attr': {'class': 'form-control form-control-lg form-control-solid'}}) }}
-								</div>
-							</div>
+							
 							<div class="col-4 ">
 								<div class="col-lg-8 fv-row fv-plugins-icon-container">
 									{{ form_widget(form.actif, {'attr': {'class': ' form-check-input form-control  '}}) }}
@@ -443,14 +429,7 @@ d'un partenaire{% endblock %}
 							
 										
 						
-							<div class="row mb-12">
-												
-								{{ form_label(form.media, "Photo Principale :", {'label_attr': {'class':"col-lg-6 col-form-label required fw-bold fs-6"}}) }}
-								
-								<div class="col-lg-8 fv-row fv-plugins-icon-container">
-									{{ form_widget(form.media, {'attr': {'class': 'form-control form-control-lg form-control-solid'}}) }}
-								</div>
-							</div>
+							
 						<div class="row mb-12"> <span><h4>Options</h4></span>
 	<div class="card-body border-top p-9" class="card-header border-0 cursor-pointer" class="collapse show"></div>
 							   <div class="col-4 ">
@@ -1149,7 +1128,19 @@ d'un partenaire{% endblock %}
 					<div class="col-lg-12 fv-row fv-plugins-icon-container">
 						{{ form_widget(form.garentie, {'attr': {'class': 'form-control form-control-lg form-control-solid'}}) }}
 					</div>
-			</div>		
+			</div>
+			
+			
+		
+			
+			
+			{{form_row(form.utilisateur)}}
+			
+			
+			</div>
+	
+			
+				
 </div>				
 			 </div>
 			

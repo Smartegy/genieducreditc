@@ -47,4 +47,14 @@ class ConcessionnairemarchandRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function fillConcessionnairesmarchands(){
+
+        return $this->createQueryBuilder('c')
+        ->addSelect('c') // to make Doctrine actually use the join
+        
+        
+        ;
+
+    }
 }

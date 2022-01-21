@@ -93,33 +93,5 @@ class Partenaire
         return $this;
     }
 
-    /**
-     * @return Collection|Vehicule[]
-     */
-    public function getVehicules(): Collection
-    {
-        return $this->vehicules;
-    }
-
-    public function addVehicule(Vehicule $vehicule): self
-    {
-        if (!$this->vehicules->contains($vehicule)) {
-            $this->vehicules[] = $vehicule;
-            $vehicule->setPartenaire($this);
-        }
-
-        return $this;
-    }
-
-    public function removeVehicule(Vehicule $vehicule): self
-    {
-        if ($this->vehicules->removeElement($vehicule)) {
-            // set the owning side to null (unless already changed)
-            if ($vehicule->getPartenaire() === $this) {
-                $vehicule->setPartenaire(null);
-            }
-        }
-
-        return $this;
-    }
+   
 }

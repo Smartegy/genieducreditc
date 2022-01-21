@@ -47,4 +47,8 @@ class VehiculeRepository extends ServiceEntityRepository
         ;
     }
     */
+
+
+    
+
 }

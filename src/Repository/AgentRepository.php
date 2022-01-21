@@ -60,6 +60,19 @@ class AgentRepository extends ServiceEntityRepository
 
     }
 
+    public function findVendeursforVehicules(){
+
+        return $this->createQueryBuilder('e')
+        ->addSelect('e') // to make Doctrine actually use the join
+        ->innerjoin('e.typeagent', 'r')
+        ->where('r.Type = :vendeur')
+        ->setParameter('vendeur', 'Vendeur')
+        ->getQuery()
+        ->getResult()
+        ;
+
+    }
+
       public function fillAgents(){
 
         return $this->createQueryBuilder('e')

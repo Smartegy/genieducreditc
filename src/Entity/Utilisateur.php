@@ -94,11 +94,19 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $partenaire;
 
-
+    /**
+     * @ORM\OneToOne(targetEntity=Agent::class, mappedBy="utilisateur", cascade={"persist", "remove"})
+     */
+    private $agent;
       /**
      * @ORM\OneToOne(targetEntity=Concessionnairemarchand::class, mappedBy="Utilisateur", cascade={"persist", "remove"})
      */
     private $concessionnairemarchand;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Vehicule::class, mappedBy="utilisateur", cascade={"persist", "remove"})
+     */
+    private $vehicule;
 
     
     public function getId(): ?int
@@ -283,6 +291,23 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
 
+    public function getAgent(): ?Agent
+    {
+        return $this->agent;
+    }
+
+    public function setAgent(Agent $agent): self
+    {
+        // set the owning side of the relation if necessary
+        if ($agent->getUtilisateur() !== $this) {
+            $agent->setUtilisateur($this);
+        }
+
+        $this->agent = $agent;
+
+        return $this;
+    }
+
     public function getConcessionnairemarchand(): ?Concessionnairemarchand
     {
         return $this->concessionnairemarchand;
@@ -301,6 +326,23 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->concessionnairemarchand = $concessionnairemarchand;
+
+        return $this;
+    }
+
+    public function getVehicule(): ?Vehicule
+    {
+        return $this->vehicule;
+    }
+
+    public function setVehicule(Vehicule $vehicule): self
+    {
+        // set the owning side of the relation if necessary
+        if ($vehicule->getUtilisateur() !== $this) {
+            $vehicule->setUtilisateur($this);
+        }
+
+        $this->vehicule = $vehicule;
 
         return $this;
     }

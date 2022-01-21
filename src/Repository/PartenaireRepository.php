@@ -54,4 +54,7 @@ class PartenaireRepository extends ServiceEntityRepository
         ->getResult()
         ;
     }
+
+
+    
 }

@@ -129,7 +129,7 @@ class Vehicule
 
     /**
      * @ORM\OneToOne(targetEntity=Medias::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+    
      */
     private $media;
 
@@ -454,17 +454,6 @@ class Vehicule
      */
     private $carproof;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Concessionnaire::class, inversedBy="vehicules")
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $concessionnaire;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Partenaire::class, inversedBy="vehicules")
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $partenaire;
 
     /**
      * @ORM\Column(type="date")
@@ -485,6 +474,15 @@ class Vehicule
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $volantajustable;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Utilisateur::class, inversedBy="vehicule", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $utilisateur;
+
+  
+   
 
     public function getId(): ?int
     {
@@ -1512,29 +1510,9 @@ class Vehicule
         return $this;
     }
 
-    public function getConcessionnaire(): ?Concessionnaire
-    {
-        return $this->concessionnaire;
-    }
+    
 
-    public function setConcessionnaire(?Concessionnaire $concessionnaire): self
-    {
-        $this->concessionnaire = $concessionnaire;
-
-        return $this;
-    }
-
-    public function getPartenaire(): ?Partenaire
-    {
-        return $this->partenaire;
-    }
-
-    public function setPartenaire(?Partenaire $partenaire): self
-    {
-        $this->partenaire = $partenaire;
-
-        return $this;
-    }
+ 
 
     public function getDatecreation(): ?\DateTimeInterface
     {
@@ -1591,4 +1569,21 @@ class Vehicule
         
         $this->datemodification = new DateTime('now');
     }
+
+    public function getUtilisateur(): ?Utilisateur
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(Utilisateur $utilisateur): self
+    {
+        $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+
+   
+
+    
 }

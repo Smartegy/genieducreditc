@@ -68,6 +68,13 @@ class Agent
      */
     private $partenaire;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Vehicule::class, mappedBy="agent")
+     */
+    private $vehicules;
+
+ 
+
     public function __construct()
     {
         $this->concessionnairemarchands = new ArrayCollection();
@@ -78,6 +85,7 @@ class Agent
         
         $this->datemodification = new DateTime('now');
         $this->partenaire = new ArrayCollection();
+        $this->vehicules = new ArrayCollection();
     }
 
     public function getId(): ?int

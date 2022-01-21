@@ -2,25 +2,35 @@
 
 namespace App\Form;
 use App\Entity\Vehicule;
+use App\Entity\Agent;
 use App\Entity\Carburant;
 use App\Entity\Carrosserie;
 use App\Entity\Category;
 use App\Entity\Concessionnaire;
+use App\Entity\Concessionnairemarchand;
 use App\Entity\Condition;
 use App\Entity\Cylindres;
 use App\Entity\Fabriquant;
-
-
 use App\Entity\Modele;
 use App\Entity\Moteur;
 use App\Entity\Partenaire;
 use App\Entity\Status;
 use App\Entity\Traction;
 use App\Entity\Transmission;
+use App\Entity\Utilisateur;
+use App\Repository\AgentRepository;
+use App\Repository\ConcessionnairemarchandRepository;
+use App\Repository\ConcessionnaireRepository;
+use App\Repository\PartenaireRepository;
+use App\Repository\UtilisateurRepository;
+use App\Repository\VehiculeRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\ChoiceList\ChoiceList;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class VehiculeType extends AbstractType
@@ -110,15 +120,7 @@ class VehiculeType extends AbstractType
             ])
             ->add('carproof')
            
-            ->add('marque',EntityType::class,[
-                'class' => Fabriquant::class,
-                'choice_label' => function ($marq) {
-                 
-                   return $marq->getMarque();
-                },
-                'expanded' => false
-                
-            ])
+           
            
             ->add('modele',EntityType::class,array(
                 'class' => Modele::class,
@@ -126,7 +128,15 @@ class VehiculeType extends AbstractType
   
             ))
     
-          
+            ->add('marque',EntityType::class,[
+                'class' => Fabriquant::class,
+                'choice_label' => function ($marq) {
+                 
+                   return $marq->getNom();
+                },
+                'expanded' => false
+                
+            ])
         
 
             ->add('category',EntityType::class,array(
@@ -186,7 +196,7 @@ class VehiculeType extends AbstractType
   
             ))
 
-            ->add('media', MediasType::class)
+           
         
             
             ->add('conditions',EntityType::class,array(
@@ -194,28 +204,55 @@ class VehiculeType extends AbstractType
                 'choice_label' => 'nom',
   
             ))
+
            
-            ->add('concessionnaire',EntityType::class,[
-                'class' => Concessionnaire::class,
-                'choice_label' => function ($cons) {
-                 
-                 
-                   return $cons->getConcessionnaire();
-                },
-                'expanded' => false
-                
-            ])
            
-            ->add('partenaire',EntityType::class,[
+            ->add('utilisateur', EntityType::class,array(
+                'class' => Utilisateur::class,
+                'choice_label' => 'nom', 
+                'query_builder' => function(UtilisateurRepository $repo)
+                    {
+                        $companies = $repo->fillCompanies();
+                       
+                        return $companies;
+                        },
+                        
+                        'expanded' => false,
+                        'multiple' => false
+                      
+                    ))
+
+            
+  
+           
+               
+
+
+          
+           /* ->add('concessionnaires',EntityType::class,[
                 'class' => Partenaire::class,
-                'choice_label' => function ($par) {
+                
+               
+               /* 'choice_label' => function(ConcessionnairemarchandRepository $conmarchandRepository, PartenaireRepository $parRepository,AgentRepository $agenRepository) {
                  
-                 
-                   return $par->getPartenaire();
+                  // $concessionnaires = $conmarchandRepository->findAll();
+                  // $partenaires = $parRepository->findAll();
+                 //  $agent = $agenRepository->findAll();
+                   $comp = [];
+                 //  $comp .= $concessionnaires;
+                  // $comp .= $partenaires;
+                  // $comp .= $agent;
+                  // $comp = $rep->fillCompanies();
+                  var_dump($comp);
+                   return $comp;
                 },
+                ,
+                'mapped' => false,
                 'expanded' => false
                 
-            ])
+            ])*/
+        
+           
         ;
     }
 
