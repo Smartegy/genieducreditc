@@ -481,6 +481,11 @@ class Vehicule
      */
     private $utilisateur;
 
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $annee;
+
   
    
 
@@ -1578,6 +1583,18 @@ class Vehicule
     public function setUtilisateur(Utilisateur $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    public function getAnnee(): ?\DateTimeInterface
+    {
+        return $this->annee;
+    }
+
+    public function setAnnee(\DateTimeInterface $annee): self
+    {
+        $this->annee = $annee;
 
         return $this;
     }

@@ -19,11 +19,10 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  */
 class UtilisateurRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
-    public function __construct(ManagerRegistry $registry,  ObjectManager $om, Agent $entityagent)
+    public function __construct(ManagerRegistry $registry,ObjectManager $om)
     {
         $this->om = $om;
-        $this->entityagent = $entityagent;
-        parent::__construct($registry, Utilisateur::class);
+       parent::__construct($registry, Utilisateur::class);
     }
 
   
@@ -76,35 +75,22 @@ class UtilisateurRepository extends ServiceEntityRepository implements PasswordU
 
     public function fillCompanies(){
 
-       /* return $this->createQueryBuilder('utilisateur')
-        ->addSelect('utilisateur')
-       // ->Where('utilisateur.id')
-        ->where('utilisateur.id not in(select utilisateur_id 
-        from App\Entity\Agent agent 
-        
-        inner join App\Entity\Typeagent typeagent on agent.typeagent_id = typeagent.id
-       where typeagent.type = typeagent.type = :Val)')
-        ->setParameter('Val', 'Agent')*/
-
         $qb = $this->om->createQueryBuilder();
         $qb2 = $this->om->createQueryBuilder();
+       
+        
 
-        $sub = $qb2->select('agent.utilisateur')
-        ->from($this->entityagent,'agent')
+        $sub = $qb2->select('DISTINCT (agent.utilisateur)')
+        ->from(Agent::class,'agent')
         ->innerjoin('agent.typeagent', 'typeagent')
-        ->where('typeagent.Type = :agent')
-        ->setParameter('agent', 'Agent');
+        ->where('typeagent.id = 15');
+       
          
         $query = $qb->select('utilisateur')
         ->from($this->_entityName,'utilisateur')
         ->where($qb->expr()->notIn('utilisateur.id',$sub->getDQL()));
 
         return $query;
-
-
-       
-
-
      ;
         
        

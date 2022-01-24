@@ -46,7 +46,7 @@ class VehiculeController extends AbstractController
     public function index(VehiculeRepository $repository): Response
     {
         $vehicules = $repository -> findAll();
-        dd($vehicules);
+       
         return $this->render('vehicule/index.html.twig', [
             'vehicules' => $vehicules,
         ]);
@@ -124,16 +124,35 @@ class VehiculeController extends AbstractController
             if($form->isSubmitted() && $form->isValid()){
 
             // Lier company au véhicule
-        //    $selectedcompany = $request->get('companies');
+              //Récupère l'image
+              $media = $form->getData()->getMedia();
+              if ($media) {
+              //Récupère le fichier image
+              $mediafile = $form->getData()->getMedia()->getImageFile();
+              //Ajouter le nom
+              $name = $mediafile->getClientOriginalName();
+              //Déplacer le fichier
+              $lien = '/media/logos/'.$name;
+              $mediafile->move('../public/media/logos', $name);
+              
+              //Définit les valeurs
+              $media->setNom($name);
+              $media->setLien($lien);
+  
+              //Ajoute le type du média
+             
+              /* $type = 'photo';*/
+              $type = $repository->gettype('photo');
+             
+              $media->setType($type);
+         
+              }
+             
 
-    // $vehicule->setConcessionnaire($);
-            
 
 
-
-
-
-            $modif = $vehicules->getId() !== null;
+  
+             $modif = $vehicules->getId() !== null;
             
             $objectManager->persist($vehicules);
             $objectManager->flush();

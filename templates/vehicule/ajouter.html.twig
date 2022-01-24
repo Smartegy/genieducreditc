@@ -226,6 +226,15 @@ d'un partenaire{% endblock %}
 				<div id="kt_account_settings_profile_details" class="collapse show">
 					{{ form_start(form, {'attr': {'class': 'form fv-plugins-bootstrap5 fv-plugins-framework'}}) }}
 			
+					<div class="col-4 ">
+						<div class="col-lg-8 fv-row fv-plugins-icon-container">
+							{{ form_widget(form.actif, {'attr': {'class': ' form-check-input form-control  '}}) }}
+						</div>
+						
+						{{ form_label(form.actif, "Actif :", {'label': {'class':"col-lg-6 col-form-label required fw-bold fs-6"}}) }}
+						
+						
+					</div>
 					<div class="row mb-4">
 							<div class="col mb-4">		
 								{{ form_label(form.stock, "Stock  :", {'label_attr': {'class':"col-lg-6 col-form-label required fw-bold fs-6"}}) }}
@@ -410,28 +419,37 @@ d'un partenaire{% endblock %}
 													{{ form_widget(form.conditions, {'attr': {'class': 'form-control form-control-lg form-control-solid'}}) }}
 												</div>
 											</div>
+											<div class="col mb-4">
+												
+												{{ form_label(form.utilisateur, "Compagnie :", {'label_attr': {'class':"col-lg-6 col-form-label required fw-bold fs-6"}}) }}
+												
+												<div class="col-lg-8 fv-row fv-plugins-icon-container">
+													{{ form_widget(form.utilisateur, {'attr': {'class': 'form-control form-control-lg form-control-solid'}}) }}
+												</div>
+											</div>
+											
 											
 
 											
 							</div>
 							
-							<div class="col-4 ">
-								<div class="col-lg-8 fv-row fv-plugins-icon-container">
-									{{ form_widget(form.actif, {'attr': {'class': ' form-check-input form-control  '}}) }}
+							<div class="row mb-12">
+								<div class="col mb-4">
+													
+									{{ form_label(form.annee, "Ajouter Année :", {'label': {'class':"col-lg-6 col-form-label required fw-bold fs-6"}}) }}
+									
+									<div class="col-lg-2 fv-row fv-plugins-icon-container">
+										{{ form_widget(form.annee, {'attr': {'class': 'form-control form-control-lg form-control-solid'}}) }}
+									</div>
 								</div>
-								
-								{{ form_label(form.actif, "Actif :", {'label_attr': {'class':"col-lg-6 col-form-label required fw-bold fs-6"}}) }}
-								
-								
-							</div>
-
-
+						    </div>
 							
-										
-						
+							<span><h4>Media</h4></span>	
+							<div class="card-body border-top p-9" class="card-header border-0 cursor-pointer" class="collapse show"></div>		
+							{{ form_row(form.media, {"label":"Ajouter le logo"})}}
 							
 						<div class="row mb-12"> <span><h4>Options</h4></span>
-	<div class="card-body border-top p-9" class="card-header border-0 cursor-pointer" class="collapse show"></div>
+	                     <div class="card-body border-top p-9" class="card-header border-0 cursor-pointer" class="collapse show"></div>
 							   <div class="col-4 ">
 									<div class="col-lg-8 fv-row fv-plugins-icon-container">
 										{{ form_widget(form.Aileronarriere, {'attr': {'class': ' form-check-input form-control  '}}) }}
@@ -1066,8 +1084,8 @@ d'un partenaire{% endblock %}
 						 {{ form_widget(form.volantajustable, {'attr': {'class': 'form-check-input'}}) }}
 					 </div>
 					 
-					 {{ form_label(form.volantajustable, "Volant ajustable:", {'label_attr': {'class':"col-lg-4 col-form-label fw-bold fs-6"}}) }}
-
+					
+					 {{ form_label(form.volantajustable, "Volant ajustable :", {'label': {'class':"col-lg-4 col-form-label fw-bold fs-6"}}) }}
 			
 				 </div>
 				
@@ -1083,7 +1101,7 @@ d'un partenaire{% endblock %}
 		
 			<div class="col mb-4">
 								
-				{{ form_label(form.carproof, "CARPROOF :", {'label_attr': {'class':"col-lg-6 col-form-label required fw-bold fs-6"}}) }}
+				{{ form_label(form.carproof, "Description :", {'label': {'class':"col-lg-6 col-form-label required fw-bold fs-6"}}) }}
 			</div>
 		
 	
@@ -1130,11 +1148,11 @@ d'un partenaire{% endblock %}
 					</div>
 			</div>
 			
+				
+		   
 			
-		
 			
 			
-			{{form_row(form.utilisateur)}}
 			
 			
 			</div>

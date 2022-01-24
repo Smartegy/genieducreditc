@@ -107,7 +107,15 @@ class VehiculeType extends AbstractType
             ->add('systemeantivol')
             ->add('systemesurveillancepressiondespneus')
             ->add('toitouvrant')
+          
             ->add('volantajustable')
+            ->add('annee',
+                'Symfony\Component\Form\Extension\Core\Type\ChoiceType',[
+                'choices' => $this->getYears(1960)
+            ])
+
+            ->add('media', MediasType::class)
+           
             ->add('disponiblefinance')
           
             ->add('financement', TextareaType::class, [
@@ -261,5 +269,11 @@ class VehiculeType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Vehicule::class,
         ]);
+    }
+    private function getYears($min, $max='current')
+    {
+         $years = range($min, ($max === 'current' ? date('Y') : $max));
+
+         return array_combine($years, $years);
     }
 }
