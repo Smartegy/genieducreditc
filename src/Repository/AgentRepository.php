@@ -104,4 +104,31 @@ class AgentRepository extends ServiceEntityRepository
         ;
 
     }
+    public function fillVendeursbyConcessionnairemarchand($value){
+        return $this->createQueryBuilder('agent')
+            ->addSelect('agent')
+            ->innerjoin('agent.typeagent', 'typeagent')
+            ->innerjoin('agent.concessionnairemarchands', 'c')
+            ->where('typeagent.Type = :agent')
+            ->andWhere('c.id = :val')
+            ->setParameter('val', $value)
+            ->setParameter('agent', 'Vendeur')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function fillAgentsbyConcessionnairemarchand($value){
+        return $this->createQueryBuilder('agent')
+            ->addSelect('agent')
+            ->innerjoin('agent.typeagent', 'typeagent')
+            ->innerjoin('agent.concessionnairemarchands', 'c')
+            ->where('typeagent.Type = :agent')
+            ->andWhere('c.id = :val')
+            ->setParameter('val', $value)
+            ->setParameter('agent', 'Agent')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 }

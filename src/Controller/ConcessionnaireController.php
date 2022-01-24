@@ -3,8 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Concessionnaire;
+use App\Entity\Concessionnairemarchand;
 use App\Entity\Medias;
+use App\Entity\Utilisateur;
+use App\Form\ConcessionnairemarchandType;
 use App\Form\ConcessionnaireType;
+use App\Form\SecConcessionnaireMarchandType;
+use App\Form\SecConcessionnaireType;
+use App\Form\SecUtilisateurType;
 use App\Repository\AgentRepository;
 use App\Repository\ConcessionnaireRepository;
 use App\Repository\ConcessionnairemarchandRepository;
@@ -16,6 +22,7 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -29,6 +36,8 @@ class ConcessionnaireController extends AbstractController
     public function __construct(MediasRepository $MR,
      FabriquantRepository $fabriquantRepository, 
      AgentRepository $agentRepository,
+     ConcessionnaireRepository $concessionnaireRepository,
+
      ObjectManager $om
      )
     {
@@ -37,6 +46,8 @@ class ConcessionnaireController extends AbstractController
         //ici on instancie le repo
         $this->fabriquantRepository = $fabriquantRepository;
         $this->AgentRepository = $agentRepository;
+        $this->ConcessionnaireRepository = $concessionnaireRepository;
+
         
     }
 
@@ -65,8 +76,8 @@ class ConcessionnaireController extends AbstractController
  
     }
 
-    #[Route('/concessionnaire/creation', name: 'creation_concessionnaire')]
-    #[Route('/concessionnaire/{id}', name: 'modification_concessionnaire', methods:'GET|POST')]
+
+    #[Route('/concessionnaire_modification/{id}', name: 'modification_concessionnaire', methods:'GET|POST')]
     public function ajout_modification(Concessionnaire $concessionnaires = null, TypemediaRepository $repository, Request $request)
     {
 
@@ -119,6 +130,7 @@ class ConcessionnaireController extends AbstractController
         $form->get('concessionnairemarchand')->get('vendeurs')->setData($vdrs);
         
         }
+
         
         $form -> handleRequest($request);
 
@@ -162,14 +174,161 @@ class ConcessionnaireController extends AbstractController
             return $this->redirectToRoute("concessionnaire");
         }
         
-        return $this->render('concessionnaire/modificationetajoutConcessionnaire.html.twig', [
-            'concessionnaires' => $concessionnaires,
+        return $this->render('concessionnaire/modification.html.twig', [
+            'concessionnaire' => $concessionnaires,
             'medias'=>$medias,
             'form' => $form->createView(),
             'isModification' => $concessionnaires->getId() !== null,
-            'listeLogo'=>$lienLogo // On passe le tableau créé plus haut en param
+            // On passe le tableau cree plus haut en param
+            'listeLogo'=>$lienLogo
+
            
         ]);
+    }
+
+    #[Route('/concessionnaire/add-concessionnaire', name: 'add_concessionnaire')]
+    public function add_concessionnaire(Concessionnaire $concessionnaires = null, TypemediaRepository $repository, UserPasswordHasherInterface $userPasswordHasher, ObjectManager $objectManager, Request $request)
+    {
+
+        if(!$concessionnaires){
+
+            $concessionnaires = new Concessionnaire();
+
+        }
+        $om=$this->om;
+
+
+        $medias = new Medias();
+
+
+
+        $cr = $this->MR->findAll();
+        //$medias->Concessionnairemarchand::class->getfabriquants()->setMedia($cr);
+
+        //Ici on va creeer un tableau pour les liens des logos des fabricants
+        $lienLogo = [];
+
+        //On recupere tous les Fabs depuis le repo instancié dans le __construct()
+        $fabs = $this->fabriquantRepository->findAll();
+
+        //On crée une boucle sur tous les fabs
+        foreach($fabs as $fab){
+            //Pour chaque fab on recupere l'id et le liens du logo
+            //Puis on l'enregistre dans le tableau
+            //L'id ce met en KEY et le lien en VALUE
+
+            $lienLogo[$fab->getId()] = $fab->getMedia()->getLien();
+        }
+
+
+        $form = $this->createForm(ConcessionnaireType::class, $concessionnaires);
+
+
+
+
+        $form -> handleRequest($request);
+
+
+
+
+
+        if($form->isSubmitted() && $form->isValid()){
+
+            $vendeurs =$form->get('concessionnairemarchand')->get('vendeurs')->getData();
+
+            //Ajoute la liste des vendeurs (unmapped)
+            foreach ($vendeurs as $vendeur){
+                $concessionnaires->getConcessionnairemarchand()->addAgent($vendeur);
+            }
+
+
+            //Ajoute le type du média
+
+            $type = $repository->gettype('photo');
+
+            $medias->setType($type);
+
+            $this->om->persist($concessionnaires);
+            $om->flush();
+            return $this->redirectToRoute("concessionnaire");
+        }
+
+        return $this->render('concessionnaire/modificationetajoutConcessionnaire.html.twig', [
+            'concessionnaire' => $concessionnaires,
+            'medias'=>$medias,
+            'form' => $form->createView(),
+            'isModification' => $concessionnaires->getId() !== null,
+            // On passe le tableau cree plus haut en param
+            'listeLogo'=>$lienLogo
+
+
+        ]);
+    }
+
+    #[Route('/consulter-concessionnaire/{id}', name: 'consultation_concessionnaire', methods:'GET|POST')]
+    public function consultation(Concessionnaire $concessionnaire): Response
+    {
+
+
+        $concessionnaire = $this->ConcessionnaireRepository->findOneById($concessionnaire->getId());
+        $agents = $this->AgentRepository-> fillAgentsbyConcessionnairemarchand($concessionnaire->getId());
+        // dd($agents);
+        $vendeurs = $this->AgentRepository-> fillVendeursbyConcessionnairemarchand($concessionnaire->getId());
+        return $this->render('concessionnaire/consultation.html.twig', [
+            'concessionnaire' => $concessionnaire,
+            'vendeurs' => $vendeurs,
+            'agents' => $agents
+
+        ]);
+    }
+
+    #[Route('/security-concessionnaire/{id}', name: 'security_concessionnaire', methods:'GET|POST')]
+    public function secure(UserPasswordHasherInterface $userPasswordHasher, ObjectManager $objectManager, Request $request, $id)
+    {
+
+
+        $concess = $this->ConcessionnaireRepository->findOneById($id);
+
+        $user= $concess->getConcessionnairemarchand()->getUtilisateur();
+        $form = $this->createForm(SecUtilisateurType::class,$user);
+        $form -> handleRequest($request);
+
+
+
+
+
+
+
+        if($form->isSubmitted() && $form->isValid()){
+
+
+                // encode the plain password
+                $user->setPassword(
+                    $userPasswordHasher->hashPassword(
+                        $user,
+                        $form->get('password')->getData()
+                    )
+                );
+
+
+
+            $objectManager->persist($user);
+            $objectManager->flush();
+
+            return $this->redirectToRoute("concessionnaire");
+
+
+        }
+
+
+
+        return $this->render('concessionnaire/security.html.twig', [
+            'utilisateur' => $user,
+            'form' => $form->createView()
+
+
+        ]);
+
     }
 }
  

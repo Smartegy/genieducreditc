@@ -47,4 +47,28 @@ class MarchandRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findOneById($value): ?Marchand
+    {
+        return $this->createQueryBuilder('marchand')
+            ->andWhere('marchand.id = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findAgentbyMarchand($value)
+    {
+        return $this->createQueryBuilder('marchand')
+            ->addSelect('marchand')
+            ->innerjoin('marchand.agent', 'pg')
+            ->where('p.id = :val')
+            ->setParameter('val', $value)
+            ->setParameter('agent', 'Agent')
+            ->getQuery()
+            ->getResult();
+    }
 }
+
+
+

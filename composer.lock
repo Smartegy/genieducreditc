@@ -3475,16 +3475,16 @@
         },
         {
             "name": "symfony/flex",
-            "version": "v2.0.1",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/flex.git",
-                "reference": "3dbfa5c4e3308fd9def9a2006a20fa0c272a30a2"
+                "reference": "ee7d282ff48c55d8e86d2aaa47802e80a3622b6e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/flex/zipball/3dbfa5c4e3308fd9def9a2006a20fa0c272a30a2",
-                "reference": "3dbfa5c4e3308fd9def9a2006a20fa0c272a30a2",
+                "url": "https://api.github.com/repos/symfony/flex/zipball/ee7d282ff48c55d8e86d2aaa47802e80a3622b6e",
+                "reference": "ee7d282ff48c55d8e86d2aaa47802e80a3622b6e",
                 "shasum": ""
             },
             "require": {
@@ -3520,7 +3520,7 @@
             "description": "Composer plugin for Symfony",
             "support": {
                 "issues": "https://github.com/symfony/flex/issues",
-                "source": "https://github.com/symfony/flex/tree/v2.0.1"
+                "source": "https://github.com/symfony/flex/tree/v2.1.1"
             },
             "funding": [
                 {
@@ -3536,7 +3536,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-29T15:40:20+00:00"
+            "time": "2022-01-19T08:54:03+00:00"
         },
         {
             "name": "symfony/form",
@@ -3646,12 +3646,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/framework-bundle.git",
-                "reference": "fcd682a7411d2239730a793eb51cf897493928a7"
+                "reference": "3c1ee94370742a1ec0e48b53c23885ac2e61b1a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/framework-bundle/zipball/fcd682a7411d2239730a793eb51cf897493928a7",
-                "reference": "fcd682a7411d2239730a793eb51cf897493928a7",
+                "url": "https://api.github.com/repos/symfony/framework-bundle/zipball/3c1ee94370742a1ec0e48b53c23885ac2e61b1a4",
+                "reference": "3c1ee94370742a1ec0e48b53c23885ac2e61b1a4",
                 "shasum": ""
             },
             "require": {
@@ -3788,7 +3788,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-18T06:45:16+00:00"
+            "time": "2022-01-19T09:17:20+00:00"
         },
         {
             "name": "symfony/http-client",
@@ -7421,9 +7421,6 @@
             "require": {
                 "php": "^7.1 || ^8.0"
             },
-            "replace": {
-                "myclabs/deep-copy": "self.version"
-            },
             "require-dev": {
                 "doctrine/collections": "^1.0",
                 "doctrine/common": "^2.6",
@@ -9680,5 +9677,5 @@
         "ext-iconv": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.2.0"
 }

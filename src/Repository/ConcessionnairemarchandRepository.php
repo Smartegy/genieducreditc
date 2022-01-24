@@ -47,4 +47,16 @@ class ConcessionnairemarchandRepository extends ServiceEntityRepository
         ;
     }
     */
+
+
+    public function findConcessionnairemarchandbymarchand($value){
+        return $this->createQueryBuilder('c')
+            ->addSelect('c')
+            ->innerjoin('c.marchand', 'm')
+            ->where('m.id = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
 }

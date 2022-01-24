@@ -1,15 +1,14 @@
 
-
 {% extends 'base.html.twig' %}
 
-{% block title %} Modification Concessionnaire {% endblock %}
+{% block title %} Modification Marchand {% endblock %}
 {% block PageTitle %}
     {% if isModification %}
         Modification
     {% else %}
         Ajout
     {% endif %}
-    d'un concessionnaire{% endblock %}
+    d'un marchand{% endblock %}
 {% block body %}
 
 
@@ -50,7 +49,7 @@
                             <!--begin::Menu-->
                             <div class="menu menu-lg-rounded menu-column menu-lg-row menu-state-bg menu-title-gray-700 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-400 fw-bold my-5 my-lg-0 align-items-stretch" id="#kt_header_menu" data-kt-menu="true">
                                 <div class="menu-item me-lg-1">
-                                    <h1>Ajout d'un Concessionnaire</h1>
+                                    <h1>Ajout d'un Marchand</h1>
                                 </div>
 
                             </div>
@@ -215,7 +214,7 @@
         <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
             <!--begin::Card title-->
             <div class="card-title m-0">
-                <h3 class="fw-bolder m-0">Ajout d'un Concessionnaire</h3>
+                <h3 class="fw-bolder m-0">Ajout d'un Marchand</h3>
             </div>
             <!--end::Card title-->
         </div>
@@ -232,15 +231,15 @@
                     {{ form_start(form, {'attr': {'class': 'form fv-plugins-bootstrap5 fv-plugins-framework'}}) }}
 
                     <div class="row mb-6">
-
-
                         <div class="col-lg-8 fv-row fv-plugins-icon-container">
-                            {{ form_widget(form.concessionnairemarchand.actif, {'attr': {'class': 'form-control form-control-lg form-control-solid'}}) }}
+                            {{ form_widget(form.concessionnairemarchand.actif, {'attr': {'class': 'form-check-input'}}) }}
                         </div>
+
+
                     </div>
                     <div class="row mb-6">
 
-                        {{ form_label(form.concessionnairemarchand.utilisateur.nom, "Nom :", {'label_attr': {'class':"col-lg-4 col-form-label required fw-bold fs-6"}}) }}
+                        {{ form_label(form.concessionnairemarchand.utilisateur.nom, "Nom  :", {'label_attr': {'class':"col-lg-4 col-form-label required fw-bold fs-6"}}) }}
 
                         <div class="col-lg-8 fv-row fv-plugins-icon-container">
                             {{ form_widget(form.concessionnairemarchand.utilisateur.nom, {'attr': {'class': 'form-control form-control-lg form-control-solid'}}) }}
@@ -249,13 +248,12 @@
 
                     <div class="row mb-6">
 
-                        {{ form_label(form.concessionnairemarchand.description, "Description  :", {'label_attr': {'class':"col-lg-4 col-form-label required fw-bold fs-6"}}) }}
+                        {{ form_label(form.concessionnairemarchand.description, "Description :", {'label_attr': {'class':"col-lg-4 col-form-label required fw-bold fs-6"}}) }}
 
                         <div class="col-lg-8 fv-row fv-plugins-icon-container">
                             {{ form_widget(form.concessionnairemarchand.description, {'attr': {'class': 'form-control form-control-lg form-control-solid'}}) }}
                         </div>
                     </div>
-
                     <div class="row mb-6">
 
                         {{ form_label(form.concessionnairemarchand.utilisateur.courriel, "Courriel :", {'label_attr': {'class':"col-lg-4 col-form-label required fw-bold fs-6"}}) }}
@@ -267,12 +265,13 @@
 
                     <div class="row mb-6">
 
-                        {{ form_label(form.concessionnairemarchand.utilisateur.telephone, "Télephone :", {'label_attr': {'class':"col-lg-4 col-form-label required fw-bold fs-6"}}) }}
+                        {{ form_label(form.concessionnairemarchand.utilisateur.telephone, "Télephone  :", {'label_attr': {'class':"col-lg-4 col-form-label required fw-bold fs-6"}}) }}
 
                         <div class="col-lg-8 fv-row fv-plugins-icon-container">
                             {{ form_widget(form.concessionnairemarchand.utilisateur.telephone, {'attr': {'class': 'form-control form-control-lg form-control-solid'}}) }}
                         </div>
                     </div>
+
                     <div class="row mb-6">
 
                         {{ form_label(form.concessionnairemarchand.utilisateur.nomutilisateur, "Nom Utilisateur :", {'label_attr': {'class':"col-lg-4 col-form-label required fw-bold fs-6"}}) }}
@@ -281,6 +280,7 @@
                             {{ form_widget(form.concessionnairemarchand.utilisateur.nomutilisateur, {'attr': {'class': 'form-control form-control-lg form-control-solid'}}) }}
                         </div>
                     </div>
+
                     <div class="row mb-6">
 
                         {{ form_label(form.concessionnairemarchand.siteweb, "Siteweb :", {'label_attr': {'class':"col-lg-4 col-form-label required fw-bold fs-6"}}) }}
@@ -297,6 +297,7 @@
                             {{ form_widget(form.concessionnairemarchand.vendeurs, {'attr': {'class': 'form-control form-control-lg form-control-solid'}}) }}
                         </div>
                     </div>
+
                     <div class="row mb-6">
 
                         {{ form_label(form.concessionnairemarchand.agents, "Agents :", {'label_attr': {'class':"col-lg-4 col-form-label required fw-bold fs-6"}}) }}
@@ -313,35 +314,43 @@
                             {{ form_widget(form.concessionnairemarchand.liendealertrack, {'attr': {'class': 'form-control form-control-lg form-control-solid'}}) }}
                         </div>
                     </div>
-
                     <div class="row mb-6">
 
-                        {{ form_row(form.concessionnairemarchand.media)}}
-                        <div class="row padding-1">
-                            {%for fabNom in form.concessionnairemarchand.fabriquants %}
-                                <div class="img_checkbox col-lg-4  col-sm-4">
+                        {{ form_label(form.concessionnairemarchand.media, "Media :", {'label_attr': {'class':"col-lg-4 col-form-label required fw-bold fs-6"}}) }}
 
-                                    {{form_row(fabNom)}}{#pour rendre le input  checkbox#}
+                        <div class="col-lg-8 fv-row fv-plugins-icon-container">
+                            {{ form_widget(form.concessionnairemarchand.media, {'attr': {'class': 'form-control form-control-lg form-control-solid'}}) }}
+                        </div>
+                    </div>
+                    <div class="row padding-1">
+                        {%for fabNom in form.concessionnairemarchand.fabriquants %}
+                            <div class="img_checkbox col-lg-4  col-sm-4">
 
-                                    {# Ici pour chaque choix on recupere l'id puis on avec l'id on recupere le liens du logo #}
-                                    {# #}
-                                    <img src="{{asset(listeLogo[fabNom.vars.name])}}" />{# pour connaitre les variables disponible#}
+                                {{form_row(fabNom)}}{#pour rendre le input  checkbox#}
 
-                                </div>
-                            {%endfor%}
+                                {# Ici pour chaque choix on recupere l'id puis on avec l'id on recupere le liens du logo #}
+                                {# #}
+                                <img src="{{asset(listeLogo[fabNom.vars.name])}}" />{# pour connaitre les variables disponible#}
+
+                            </div>
+                        {%endfor%}
+
                     </div>
 
 
-                    <div class="card-footer d-flex justify-content-end py-6 px-9">
-                        <button type="reset" class="btn btn-light btn-active-light-primary me-2"><a href="{{path("concessionnaire")}}"> Annuler</a></button>
-                        <button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit">Ajouter</button>
-                    </div>
 
-                    {# Fermeture de la balise <form> du formulaire HTML #}
-                    {{ form_end(form) }}
                 </div>
+
+                <div class="card-footer d-flex justify-content-end py-6 px-9">
+                    <button type="reset" class="btn btn-light btn-active-light-primary me-2">Annuler</button>
+                    <button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit">Ajouter</button>
+                </div>
+
+                {# Fermeture de la balise <form> du formulaire HTML #}
+                {{ form_end(form) }}
             </div>
         </div>
+    </div>
 
     </div>
 
@@ -352,7 +361,7 @@
             <!--begin::Page title-->
             <div data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}" class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
                 <!--begin::Title-->
-                <h1 class="d-flex align-items-center text-dark fw-bolder fs-3 my-1">Ajout d'un Concessionnaire</h1>
+                <h1 class="d-flex align-items-center text-dark fw-bolder fs-3 my-1">Ajout d'un Marchand</h1>
                 <!--end::Title-->
                 <!--begin::Separator-->
                 <span class="h-20px border-gray-300 border-start mx-4"></span>
@@ -361,7 +370,7 @@
                 <ul class="breadcrumb breadcrumb-separatorless fw-bold fs-7 my-1">
                     <!--begin::Item-->
                     <li class="breadcrumb-item text-muted">
-                        <a href="{{path("concessionnaire")}}" class="text-muted text-hover-primary">Accueil</a>
+                        <a href="{{path("marchand")}}" class="text-muted text-hover-primary">Accueil</a>
                     </li>
                     <!--end::Item-->
                     <!--begin::Item-->
@@ -370,7 +379,7 @@
                     </li>
                     <!--end::Item-->
                     <!--begin::Item-->
-                    <li class="breadcrumb-item text-muted">Concessionnaires</li>
+                    <li class="breadcrumb-item text-muted">Marchands</li>
                     <!--end::Item-->
                     <!--begin::Item-->
                     <li class="breadcrumb-item">
@@ -378,7 +387,7 @@
                     </li>
                     <!--end::Item-->
                     <!--begin::Item-->
-                    <li class="breadcrumb-item text-muted">Concessionnaires</li>
+                    <li class="breadcrumb-item text-muted">Marchands</li>
                     <!--end::Item-->
                     <!--begin::Item-->
                     <li class="breadcrumb-item">
@@ -386,7 +395,7 @@
                     </li>
                     <!--end::Item-->
                     <!--begin::Item-->
-                    <li class="breadcrumb-item text-dark">Ajout d'un Concessionnaire</li>
+                    <li class="breadcrumb-item text-dark">Ajout d'un Marchand</li>
                     <!--end::Item-->
                 </ul>
                 <!--end::Breadcrumb-->
