@@ -47,4 +47,14 @@ class ConcessionnaireRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findOneById($value): ?Concessionnaire
+    {
+        return $this->createQueryBuilder('concessionnaire')
+            ->andWhere('concessionnaire.id = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
 }

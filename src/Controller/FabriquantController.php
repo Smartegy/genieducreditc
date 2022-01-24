@@ -47,9 +47,9 @@ class FabriquantController extends AbstractController
         }
     }
 
-    #[Route('/fabriquant/creation', name: 'creation_fabriquant')]
+
     #[Route('/fabriquant/{id}', name: 'modification_fabriquant', methods:'GET|POST')]
-    public function ajout_modification(Fabriquant $fabriquants = null, TypemediaRepository $repository, Request $request)
+    public function modification(Fabriquant $fabriquants = null, TypemediaRepository $repository, Request $request)
     {
 
         
@@ -100,9 +100,124 @@ class FabriquantController extends AbstractController
             return $this->redirectToRoute("fabriquant");
         }
         return $this->render('fabriquant/modificationetajoutFabriquant.html.twig', [
-            'fabriquants' => $fabriquants,
+            'fabriquant' => $fabriquants,
             'form' => $form->createView(),
             'isModification' => $fabriquants->getId() !== null
         ]);
+    }
+
+    #[Route('/fabriquant/creation', name: 'creation_fabriquant')]
+    public function ajout_fab(Fabriquant $fabriquants = null, TypemediaRepository $repository, Request $request)
+    {
+
+
+        if(!$fabriquants){
+
+            $fabriquants = new fabriquant();
+
+        }
+        //$objectManager=$this->getDoctrine()->getManager();
+
+        $om = $this->om;
+        $form = $this->createForm(FabriquantType::class,$fabriquants);
+
+        $vendeurs = $form->getData();
+        $form -> handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+
+            //Récupère l'image
+            $media = $form->getData()->getMedia();
+            if ($media) {
+                //Récupère le fichier image
+                $mediafile = $form->getData()->getMedia()->getImageFile();
+                //Ajouter le nom
+                $name = $mediafile->getClientOriginalName();
+                //Déplacer le fichier
+                $lien = '/media/logos/'.$name;
+                $mediafile->move('../public/media/logos', $name);
+
+                //Définit les valeurs
+                $media->setNom($name);
+                $media->setLien($lien);
+
+                //Ajoute le type du média
+
+                /* $type = 'photo';*/
+                $type = $repository->gettype('photo');
+
+                $media->setType($type);
+
+
+
+            }
+
+            $om->persist($fabriquants);
+
+            $om->flush();
+            return $this->redirectToRoute("fabriquant");
+        }
+        return $this->render('fabriquant/modification.html.twig', [
+            'fabriquant' => $fabriquants,
+            'form' => $form->createView(),
+            'isModification' => $fabriquants->getId() !== null
+        ]);
+    }
+
+    #[Route('/consultation-fabriquant/{id}', name: 'consultation_fabriquant', methods:'GET|POST')]
+    public function consultation(FabriquantRepository $repository,Fabriquant $fabriquant): Response
+    {
+
+
+        $fabriquant = $repository ->findOneById ($fabriquant->getId());
+
+
+        return $this->render('fabriquant/consultation.html.twig', [
+            'fabriquant' => $fabriquant
+
+        ]);
+    }
+
+    #[Route('/security-fabriquant/{id}', name: 'security_fabriquant', methods:'GET|POST')]
+    public function secure(UserPasswordHasherInterface $userPasswordHasher, ObjectManager $objectManager, Request $request, $id)
+    {
+
+
+        $fabriquant = $this->FabriquantRepository->findOneById($id);
+
+        $user= $fabriquant->getUtilisateur();
+        $form = $this->createForm(SecUtilisateurType::class,$user);
+        $form -> handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+
+
+            // encode the plain password
+            $user->setPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $form->get('password')->getData()
+                )
+            );
+
+
+
+            $objectManager->persist($user);
+            $objectManager->flush();
+
+            return $this->redirectToRoute("fabriquant");
+
+
+        }
+
+
+
+        return $this->render('utilisateur/security.html.twig', [
+            'utilisateur' => $user,
+            'form' => $form->createView()
+
+
+        ]);
+
     }
 }
