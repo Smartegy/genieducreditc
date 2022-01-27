@@ -33,10 +33,7 @@ class Partenaire
      */
     private $actif;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Vehicule::class, mappedBy="partenaire")
-     */
-    private $vehicules;
+ 
     public function __construct()
     {
         $this->agents = new ArrayCollection();

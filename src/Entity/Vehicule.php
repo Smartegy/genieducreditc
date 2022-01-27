@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\VehiculeRepository;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -127,11 +129,7 @@ class Vehicule
      */
     private $prixwholesale;
 
-    /**
-     * @ORM\OneToOne(targetEntity=Medias::class, cascade={"persist", "remove"})
-    
-     */
-    private $media;
+ 
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -482,9 +480,25 @@ class Vehicule
     private $utilisateur;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="integer")
      */
     private $annee;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Medias::class, inversedBy="vehicule", cascade={"persist", "remove"})
+     */
+    private $media;
+
+    /**
+     * @ORM\OneToMany(targetEntity=GalerieVehicule::class, mappedBy="vehicule", cascade={"persist", "remove"})
+     */
+    private $galerie;
+
+  
+
+    
+
+    
 
   
    
@@ -734,17 +748,7 @@ class Vehicule
         return $this;
     }
 
-    public function getMedia(): ?Medias
-    {
-        return $this->media;
-    }
-
-    public function setMedia(Medias $media): self
-    {
-        $this->media = $media;
-
-        return $this;
-    }
+  
 
     public function getAileronarriere(): ?bool
     {
@@ -1573,6 +1577,9 @@ class Vehicule
         }
         
         $this->datemodification = new DateTime('now');
+        $this->galerie = new ArrayCollection();
+       
+        
     }
 
     public function getUtilisateur(): ?Utilisateur
@@ -1587,17 +1594,67 @@ class Vehicule
         return $this;
     }
 
-    public function getAnnee(): ?\DateTimeInterface
+    public function getAnnee(): ?int
     {
         return $this->annee;
     }
 
-    public function setAnnee(\DateTimeInterface $annee): self
+    public function setAnnee(int $annee): self
     {
         $this->annee = $annee;
 
         return $this;
     }
+
+    public function getMedia(): ?Medias
+    {
+        return $this->media;
+    }
+
+    public function setMedia(?Medias $media): self
+    {
+        $this->media = $media;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|GalerieVehicule[]
+     */
+    public function getGalerie(): Collection
+    {
+        return $this->galerie;
+    }
+
+    public function addGalerie(GalerieVehicule $galerie): self
+    {
+        if (!$this->galerie->contains($galerie)) {
+            $this->galerie[] = $galerie;
+            $galerie->setVehicule($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGalerie(GalerieVehicule $galerie): self
+    {
+        if ($this->galerie->removeElement($galerie)) {
+            // set the owning side to null (unless already changed)
+            if ($galerie->getVehicule() === $this) {
+                $galerie->setVehicule(null);
+            }
+        }
+
+        return $this;
+    }
+
+   
+
+   
+
+   
+
+   
 
 
    

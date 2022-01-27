@@ -2,16 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\MediasRepository;
+use App\Repository\GalerieVehiculeRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
- * @ORM\Entity(repositoryClass=MediasRepository::class)
+ * @ORM\Entity(repositoryClass=GalerieVehiculeRepository::class)
  */
-class Medias
+class GalerieVehicule
 {
     /**
      * @ORM\Id
@@ -26,33 +25,26 @@ class Medias
     private $nom;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $lien;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Typemedia::class, inversedBy="medias")
+     * @ORM\ManyToOne(targetEntity=Typemedia::class, inversedBy="galerieVehicules")
      * @ORM\JoinColumn(nullable=false)
      */
     private $type;
-
-
-     /**
+        /**
      *
      * @var File
      */
     private $imageFile;
 
     /**
-     * @ORM\OneToOne(targetEntity=Vehicule::class, mappedBy="media", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=Vehicule::class, inversedBy="galerie")
      */
     private $vehicule;
 
-   
-
-   
-
-    
     public function getId(): ?int
     {
         return $this->id;
@@ -75,7 +67,7 @@ class Medias
         return $this->lien;
     }
 
-    public function setLien(string $lien): self
+    public function setLien(?string $lien): self
     {
         $this->lien = $lien;
 
@@ -93,10 +85,9 @@ class Medias
 
         return $this;
     }
-
-    public function setImageFile(UploadedFile $media):void
+    public function setImageFile(UploadedFile $galerie):void
     {
-        $this->imageFile = $media;
+        $this->imageFile = $galerie;
         
 
     }
@@ -106,6 +97,7 @@ class Medias
         return $this->imageFile;
     }
 
+
     public function getVehicule(): ?Vehicule
     {
         return $this->vehicule;
@@ -113,21 +105,8 @@ class Medias
 
     public function setVehicule(?Vehicule $vehicule): self
     {
-        // unset the owning side of the relation if necessary
-        if ($vehicule === null && $this->vehicule !== null) {
-            $this->vehicule->setMedia(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($vehicule !== null && $vehicule->getMedia() !== $this) {
-            $vehicule->setMedia($this);
-        }
-
         $this->vehicule = $vehicule;
 
         return $this;
     }
-
-    
-
 }

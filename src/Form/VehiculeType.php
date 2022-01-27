@@ -11,6 +11,8 @@ use App\Entity\Concessionnairemarchand;
 use App\Entity\Condition;
 use App\Entity\Cylindres;
 use App\Entity\Fabriquant;
+use App\Entity\GalerieVehicule;
+use App\Entity\Medias;
 use App\Entity\Modele;
 use App\Entity\Moteur;
 use App\Entity\Partenaire;
@@ -24,6 +26,7 @@ use App\Repository\ConcessionnaireRepository;
 use App\Repository\PartenaireRepository;
 use App\Repository\UtilisateurRepository;
 use App\Repository\VehiculeRepository;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -31,6 +34,9 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\ChoiceList\ChoiceList;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class VehiculeType extends AbstractType
@@ -114,8 +120,60 @@ class VehiculeType extends AbstractType
                 'choices' => $this->getYears(1960)
             ])
 
-            ->add('media', MediasType::class)
+/*
+           //Photo prinicpale
+            ->add('photoprincipale', FileType::class,[
+                'label'=> false ,
+                'mapped' =>false
+            ])
            
+
+            //Galerie
+        
+            ->add('media', CollectionType::class, array(
+                'type' => 'file',
+                'required' => false,
+                'attr' => array(
+                    'multiple' => 'multiple'
+                )))
+
+           
+ */          
+           //Photo prinicpale
+           ->add('media', MediasType::class)
+
+            
+         // ->add('galerie',GalerieVehiculeType ::class)
+
+     /*    ->add('galerie', GalerieVehiculeType ::class,[
+            'allow_file_upload'=>true
+         ]
+            )*/
+
+          //  ->add('galerie',GalerieVehiculeType::class)
+      
+
+            ->add('galerie', CollectionType::class, array(
+                'entry_type'        => GalerieVehiculeType::class,
+                'prototype'         => true,
+                'allow_add'         => true,
+                'allow_delete'      => true,
+                'by_reference'      => false,
+                'required'          => false,
+                'label'             => false,
+            ))
+     
+
+
+           
+         
+         /*    ->add('galerie', FileType::class,[
+           
+            'label'=> false ,
+            'multiple'=>true 
+        ])
+*/
+
             ->add('disponiblefinance')
           
             ->add('financement', TextareaType::class, [
@@ -264,16 +322,19 @@ class VehiculeType extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => Vehicule::class,
-        ]);
-    }
+
     private function getYears($min, $max='current')
     {
          $years = range($min, ($max === 'current' ? date('Y') : $max));
 
          return array_combine($years, $years);
     }
+  
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => Vehicule::class,
+        ]);
+    }
+   
 }

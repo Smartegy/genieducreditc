@@ -3,8 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Vehicule;
+use App\Entity\Typemedia;
 use App\Entity\Concessionnaire;
+use App\Entity\GalerieVehicule;
 use App\Entity\Marchand;
+use App\Entity\Medias;
 use App\Repository\VehiculeRepository;
 use App\Repository\ConcessionnaireRepository;
 use App\Repository\MarchandRepository;
@@ -12,10 +15,13 @@ use App\Repository\PartenaireRepository;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Form\VehiculeType;
+use App\Form\MediaType;
 use App\Repository\AdministrateurRepository;
 use App\Repository\AgentRepository;
 use App\Repository\ConcessionnairemarchandRepository;
+use App\Repository\GalerieVehiculeRepository;
 use App\Repository\MediasRepository;
+use App\Repository\TypemediaRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,7 +33,8 @@ class VehiculeController extends AbstractController
      AgentRepository $agentRepository,
      ConcessionnairemarchandRepository $concessionnairemarchandRepository,
      AdministrateurRepository $administrateurRepository,
-     ObjectManager $om
+     ObjectManager $om,
+     GalerieVehiculeRepository $repositorygalerie
      )
     {
         $this->MR = $MR;
@@ -56,131 +63,206 @@ class VehiculeController extends AbstractController
 
 
     #[Route('/add-vehicule', name: 'add_vehicule')]
-    public function ajouter(Vehicule $vehicules = null,ConcessionnaireRepository $repository,MarchandRepository $repositorym,ObjectManager $objectManager,PartenaireRepository $repositoryp,Request $request)
+    public function ajouter(Vehicule $vehicules = null,TypemediaRepository $repository,Request $request)
     {
-
-        //$concessionnaires = $repository -> findAll();
-        //$marchands = $repositorym -> findAll();
-        //$partenaires = $repository -> findAll();
-        
-        
-        
 
        if(!$vehicules){
 
             $vehicules = new Vehicule();
-
-         /*    //Ajouter les partenaires au select companies
-            $companies=[];
-            $partenairesArray = [];
-            $partenaires = $this->partenaireRepository->findAll();
-         
-            foreach($partenaires as $partenaire){
-                $partenairesRow = array(
-                    'id' => $partenaire->getUtilisateur()->getID(),
-                    'nom' =>$partenaire->getUtilisateur()->getNom()
-            );
+       }
+            $om = $this->om;
             
-            array_push($partenairesArray, $partenairesRow);
-            }
+           
 
+           if ($vehicules->getGalerie()->isEmpty()) {
+                $image = new GalerieVehicule();
+                $image->setVehicule($vehicules);  
+                $vehicules->getGalerie()->add($image);
+           }
             
-
-            $partenairesObject = (object)$partenairesArray;*/
-            //var_dump($partenairesObject); die();
-            
-
-         //  array_push($companies, $partenaire->getUtilisateur()->getNom());
-
-           /* //Ajouter les concessionnaires marchands au select companies
-            $concessionnairesmarchands = $this->ConcessionnairemarchandRepository->findAll();
-            foreach($concessionnairesmarchands as $concessionnairesmarchand){
-            array_push($companies, $concessionnairesmarchand->getUtilisateur()->getNom());
-            }
-
-            //Ajouter les vendeurs au select companies
-            $vendeurs = $this->AgentRepository->findVendeursforVehicules();
-            foreach($vendeurs as $vendeur){
-        
-            array_push($companies, $vendeur->getUtilisateur()->getNom());
-            }
-
-
-            //Ajouter les administrateurs au select companies
-            $administrateurs = $this->AdministrateurRepository->findAll();
-            foreach($administrateurs as $administrateur){
-            array_push($companies, $administrateur->getUtilisateur()->getNom());
-            }
-            */
-
             $form = $this->createForm(VehiculeType::class,$vehicules);
             $form -> handleRequest($request);
-            
-            //var_dump( $form->get('companies')->getData());
-         //  }
-         
-         
-            
+          
+           
             if($form->isSubmitted() && $form->isValid()){
+               
+                $galerie =$form->getData()->getGalerie();
+                
+                
+                foreach($galerie as $photogalerie){
 
-            // Lier company au véhicule
-              //Récupère l'image
-              $media = $form->getData()->getMedia();
-              if ($media) {
-              //Récupère le fichier image
-              $mediafile = $form->getData()->getMedia()->getImageFile();
-              //Ajouter le nom
-              $name = $mediafile->getClientOriginalName();
-              //Déplacer le fichier
-              $lien = '/media/logos/'.$name;
-              $mediafile->move('../public/media/logos', $name);
-              
-              //Définit les valeurs
-              $media->setNom($name);
-              $media->setLien($lien);
-  
-              //Ajoute le type du média
-             
-              /* $type = 'photo';*/
-              $type = $repository->gettype('photo');
-             
-              $media->setType($type);
-         
-              }
-             
+                   
 
+                    $photogaleriefile = $photogalerie->getImageFile();
+                  
+                    //Ajouter le nom
+                   $photogalerienom= $photogaleriefile->getClientOriginalName();
+                  
 
+                    //Déplacer le fichier
+                    $photogalerielien = '/media/galerie/'.$photogalerienom;
+                    $photogaleriefile->move('../public/media/galerie', $photogalerienom);
 
-  
-             $modif = $vehicules->getId() !== null;
+                  
+                    $photogalerie->setNom($photogalerienom);
+                    $photogalerie->setLien($photogalerielien);
+
+                   
+
+                    //Ajoute le type du média
+                  
+                        $type = $repository->gettype('galerie');
+                      
+                        
+                        $photogalerie->setType($type);
+                    
+                    
+                       
+                    
+                } 
             
-            $objectManager->persist($vehicules);
-            $objectManager->flush();
-            $this->addFlash("success", ($modif) ? "La modification a été effectuée" : "L'ajout a été effectuée");
+                //dd($galerie);die();
+               
+
+               
+
+
+                //Récupère l'image
+            $media = $form->getData()->getMedia();
+             if ($media){
+                //Récupère le fichier image
+                $mediafile = $form->getData()->getMedia()->getImageFile();
+                //Ajouter le nom
+                $name = $mediafile->getClientOriginalName();
+                //Déplacer le fichier
+                $lien = '/media/logos/'.$name;
+                $mediafile->move('../public/media/logos', $name);
+
+                //Définit les valeurs
+                $media->setNom($name);
+                $media->setLien($lien);
+
+                //Ajoute le type du média
+
+                /* $type = 'photo';*/
+                $type = $repository->gettype('photo');
+
+                $media->setType($type);
+
+
+
+            }
+            
+            
+            
+            $om->persist($vehicules);
+           
+            $om->flush();
             return $this->redirectToRoute("vehicule");
                 
-            
+        
                  
-             }
+             
         }
 
-
+        
       
         return $this->render('vehicule/ajouter.html.twig', [
             
             'vehicules' => $vehicules,
-          //'companies' => $partenairesObject,
-           
-            'form' => $form->createView()
+             'form' => $form->createView()
             
         ]);   
     }     
             
-   
-  
- //   $marchands = $repository -> findAll(); 
-  //  $partenaires = $repository -> findAll();
+    #[Route('/edit-vehicule/{id}', name: 'edit-vehicule', methods:'GET|POST')]
+    
+    public function edit(Vehicule $vehicules = null,VehiculeRepository $repository,Request $request): Response
+    {
+        if(!$vehicules){
 
-   // $form->get('concessionnairemarchand')->get('vendeurs')->setData($vdrs);
+            $vehicules = new Vehicule();
+       }
+            $om = $this->om;
+            
+        $form = $this->createForm(VehiculeType::class,$vehicules);
+        $form -> handleRequest($request);
+      
+       
+        if($form->isSubmitted() && $form->isValid()){
+
+
+
+                                $galerie =$form->getData()->getGalerie();
+                                    
+                                    
+                                foreach($galerie as $photogalerie){
+
+                                
+
+                                    $photogaleriefile = $photogalerie->getImageFile();
+                                
+                                    //Ajouter le nom
+                                $photogalerienom= $photogaleriefile->getClientOriginalName();
+                                
+
+                                    //Déplacer le fichier
+                                    $photogalerielien = '/media/galerie/'.$photogalerienom;
+                                    $photogaleriefile->move('../public/media/galerie', $photogalerienom);
+
+                                
+                                    $photogalerie->setNom($photogalerienom);
+                                    $photogalerie->setLien($photogalerielien);
+
+                                
+
+                                    //Ajoute le type du média
+                                
+                                        $type = $repository->gettype('galerie');
+                                    
+                                        
+                                        $photogalerie->setType($type);
+                                    
+                                    
+                                    
+                                    
+                                } 
+
+                            $media = $form->getData()->getMedia();
+                                if ($media){
+                                //Récupère le fichier image
+                                $mediafile = $form->getData()->getMedia()->getImageFile();
+                                //Ajouter le nom
+                                $name = $mediafile->getClientOriginalName();
+                                //Déplacer le fichier
+                                $lien = '/media/logos/'.$name;
+                                $mediafile->move('../public/media/logos', $name);
+
+                                //Définit les valeurs
+                                $media->setNom($name);
+                                $media->setLien($lien);
+
+                                //Ajoute le type du média
+
+                                /* $type = 'photo';*/
+                                $type = $repository->gettype('photo');
+
+                                $media->setType($type);
+                            }
+                        }                
+          $om->persist($vehicules);
+          
+                
+            
+       
+            $om->flush();
+            return $this->redirectToRoute("vehicule");
+        
+        return $this->render('vehicule/modifier.html.twig', [
+            'vehicules' => $vehicules,
+            'form' => $form->createView()
+        ]);
+    }
+  
 
 }    
