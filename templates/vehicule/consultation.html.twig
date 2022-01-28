@@ -379,13 +379,17 @@
 									<div class="card-header cursor-pointer">
 										<!--begin::Card title-->
 										<div class="card-title m-0">
-											<h3 class="fw-bolder m-0">Détail du Véhicule</h3>
+											<h3 class="fw-bolder m-0">Détail du Véhicule</h3> 
+                                             
 										</div>
+                                      
 										<!--end::Card title-->
 										<!--begin::Action-->
 										<a href= "{{path("edit-vehicule",{ 'id' : vehicules.Id})}}" class="btn btn-primary align-self-center">Editer Véhicule</a>
+                                       
 										<!--end::Action-->
 									</div>
+                                    <div class="card-body border-top p-9" class="card-header border-0 cursor-pointer" class="collapse show"></div>
                                  
 									<!--begin::Card header-->
 									<!--begin::Card body-->
@@ -393,154 +397,178 @@
                                         
                                         <div class="row mb-12">
 										<!--begin::Row-->
-                                                <div class="col mb-4">
-                                                    <!--begin::Label-->
+
+                                           <div class="col mb-4">
+                                                <label class="col-lg-4 fw-bold text-muted"> Actif</label>
+                                                    {% if vehicules.actif == 1 %}
+                                                    <span class="fw-bolder fs-6 text-gray-800">Oui</span>
+                                                    {% else %}
+                                                    <span class="fw-bolder fs-6 text-gray-800">Non</span>
+                                                    {% endif %}
+                                            </div>
                                                 
-                                                    <label class="col-lg-8 fw-bold text-muted">Stock</label>
-                                                    <!--end::Label-->
-                                                    <!--begin::Col-->
-                                                    <div class="col-lg-8">
-                                                        <span class="fw-bold text-gray-800 fs-6">{{vehicules.stock}}</span>
-                                                    </div>
-                                                    <!--end::Col-->
-                                                </div>
                                                 <!--end::Row-->
                                                 <!--begin::Input group-->
-                                                <div class="col mb-4">
+                                                <div class="col-4">
                                                     <!--begin::Label-->
-                                                    <label class="col-lg-8 fw-bold text-muted">Status</label>
+                                                    <label class="col-lg-4 fw-bold text-muted">Status</label>
                                                     <!--end::Label-->
                                                     <!--begin::Col-->
-                                                    <div class="col-lg-8 fv-row">
-                                                        <span class="fw-bold text-gray-800 fs-6">{{vehicules.status.nom}}</span>
-                                                    </div>
+                                                    
+                                                        <span class="fw-bolder fs-6 text-gray-800">{{vehicules.status.nom}}</span>
+                                                   
                                                     <!--end::Col-->
                                                 </div>
                                                 
-                                                <div class="col mb-4">
+                                         
+                                                
+                                                <div class="col-4">
                                                     <!--begin::Label-->
-                                                    <label class="col-lg-8 fw-bold text-muted">KM</label>
+                                                    <label class="col-lg-4 fw-bold text-muted">KM</label>
                                                     <!--end::Label-->
                                                     <!--begin::Col-->
-                                                    <div class="col-lg-8">
-                                                        <a href="#" class="fw-bold fs-6 text-gray-800 text-hover-primary">{{vehicules.km}}</a>
-                                                    </div>
+                                                 
+                                                    <span class="fw-bolder fs-6 text-gray-800">{{vehicules.km}}</span>
+                                                  
                                                     <!--end::Col-->
                                                 </div>
                                         </div>        
 										<!--end::Input group-->
 										<!--begin::Input group-->
-                                    
+                                        <div class="card-body border-top p-9" class="card-header border-0 cursor-pointer" class="collapse show"></div>
                                         <div class="row mb-12">
-                                            <div class="col mb-4">
+                                            <div class="col-4">
                                                 <!--begin::Label-->
-                                                    <label class="col-lg-8 fw-bold text-muted">Couleur Interieur</label>
+                                                    <label class="col-lg-6 fw-bold text-muted">Couleur Interieur</label>
                                                     
                                                     <!--end::Label-->
                                                     <!--begin::Col-->
-                                                    <div class="col-lg-8">
+                                                   
                                                         <span class="fw-bolder fs-6 text-gray-800">{{vehicules.couleurinterieur}}</span>
-                                                    </div>
+                                                  
                                              </div>
                                              <div class="col mb-4">
                                                 <!--begin::Label-->
-                                                    <label class="col-lg-8 fw-bold text-muted">Transmission</label>
+                                                    <label class="col-lg-4 fw-bold text-muted">Transmission</label>
                                                     
                                                     <!--end::Label-->
                                                     <!--begin::Col-->
-                                                    <div class="col-lg-8">
+                                                  
                                                         <span class="fw-bolder fs-6 text-gray-800">{{vehicules.transmission.nom}}</span>
-                                                    </div>
-                                             </div> <div class="col mb-4">
+                                                   
+                                               </div>
+
+                                              
+                                            
+                                               	
+
+
+
+                                              <div class="col-4">
                                                 <!--begin::Label-->
-                                                    <label class="col-lg-8 fw-bold text-muted">Carburant</label>
+                                                    <label class="col-lg-4 fw-bold text-muted">Carburant</label>
                                                     
                                                     <!--end::Label-->
                                                     <!--begin::Col-->
-                                                    <div class="col-lg-8">
+                                                   
                                                         <span class="fw-bolder fs-6 text-gray-800">{{vehicules.Carburant.nom}}</span>
-                                                    </div>
+                                                    
                                              </div>
 											<!--end::Col-->
 										</div>
+                                        <div class="card-body border-top p-9" class="card-header border-0 cursor-pointer" class="collapse show"></div>
                                         <div class="row mb-12">
-                                            <div class="col mb-4">
+                                            <div class="col-4">
                                                 <!--begin::Label-->
-                                                    <label class="col-lg-8 fw-bold text-muted">Traction</label>
+                                                    <label class="col-lg-4 fw-bold text-muted">Traction</label>
                                                     
                                                     <!--end::Label-->
                                                     <!--begin::Col-->
-                                                    <div class="col-lg-8">
+                                                   
                                                         <span class="fw-bolder fs-6 text-gray-800">{{vehicules.traction.nom}}</span>
-                                                    </div>
+                                                   
                                              </div>
-                                             <div class="col mb-4">
+                                             <div class="col-4">
                                                 <!--begin::Label-->
-                                                    <label class="col-lg-8 fw-bold text-muted">Cylindres</label>
+                                                    <label class="col-lg-4 fw-bold text-muted">Cylindres</label>
                                                     
                                                     <!--end::Label-->
                                                     <!--begin::Col-->
-                                                    <div class="col-lg-8">
+                                                
                                                         <span class="fw-bolder fs-6 text-gray-800">{{vehicules.cylindres.nom}}</span>
-                                                    </div>
-                                             </div> <div class="col mb-4">
-                                                <!--begin::Label-->
-                                                    <label class="col-lg-8 fw-bold text-muted">Moteur</label>
-                                                    
-                                                    <!--end::Label-->
-                                                    <!--begin::Col-->
-                                                    <div class="col-lg-8">
-                                                        <span class="fw-bolder fs-6 text-gray-800">{{vehicules.moteur.nom}}</span>
-                                                    </div>
-                                             </div>
-											<!--end::Col-->
-										</div>
-                                        <div class="row mb-12">
-                                            <div class="col mb-4">
-                                                <!--begin::Label-->
-                                                    <label class="col-lg-8 fw-bold text-muted">Portes</label>
-                                                    
-                                                    <!--end::Label-->
-                                                    <!--begin::Col-->
-                                                    <div class="col-lg-8">
-                                                        <span class="fw-bolder fs-6 text-gray-800">{{vehicules.portes}}</span>
-                                                    </div>
-                                             </div>
-                                             <div class="col mb-4">
-                                                <!--begin::Label-->
-                                                    <label class="col-lg-8 fw-bold text-muted">Passagers</label>
-                                                    
-                                                    <!--end::Label-->
-                                                    <!--begin::Col-->
-                                                    <div class="col-lg-8">
-                                                        <span class="fw-bolder fs-6 text-gray-800">{{vehicules.Passagers}}</span>
-                                                    </div>
+                                                
                                              </div> 
                                              <div class="col mb-4">
                                                 <!--begin::Label-->
-                                                    <label class="col-lg-8 fw-bold text-muted">prix wholesale</label>
+                                                    <label class="col-lg-4 fw-bold text-muted">Moteur</label>
                                                     
                                                     <!--end::Label-->
                                                     <!--begin::Col-->
-                                                    <div class="col-lg-8">
-                                                        <span class="fw-bolder fs-6 text-gray-800">{{vehicules.prixwholesale}}</span>
-                                                    </div>
+                                               
+                                                        <span class="fw-bolder fs-6 text-gray-800">{{vehicules.moteur.nom}}</span>
+                                                   
                                              </div>
 											<!--end::Col-->
 										</div>
+                                        <div class="card-body border-top p-9" class="card-header border-0 cursor-pointer" class="collapse show"></div>
                                         <div class="row mb-12">
                                             <div class="col mb-4">
                                                 <!--begin::Label-->
-                                                    <label class="col-lg-8 fw-bold text-muted">Conditions</label>
+                                                    <label class="col-lg-4 fw-bold text-muted">Portes</label>
                                                     
                                                     <!--end::Label-->
                                                     <!--begin::Col-->
-                                                    <div class="col-lg-8">
+                                                    
+                                                        <span class="fw-bolder fs-6 text-gray-800">{{vehicules.portes}}</span>
+                                                  
+                                             </div>
+                                             <div class="col mb-4">
+                                                <!--begin::Label-->
+                                                    <label class="col-lg-4 fw-bold text-muted">Passagers</label>
+                                                    
+                                                    <!--end::Label-->
+                                                    <!--begin::Col-->
+                                              
+                                                        <span class="fw-bolder fs-6 text-gray-800">{{vehicules.Passagers}}</span>
+                                                
+                                             </div> 
+                                             <div class="col mb-4">
+                                                <!--begin::Label-->
+                                                    <label class="col-lg-4 fw-bold text-muted">prix wholesale</label>
+                                                    
+                                                    <!--end::Label-->
+                                                    <!--begin::Col-->
+                                                 
+                                                        <span class="fw-bolder fs-6 text-gray-800">{{vehicules.prixwholesale}}</span>
+                                                   
+                                             </div>
+											<!--end::Col-->
+										</div>
+                                        <div class="card-body border-top p-9" class="card-header border-0 cursor-pointer" class="collapse show"></div>
+                                        <div class="row mb-12">
+                                            <div class="col mb-4">
+                                                <!--begin::Label-->
+                                                    <label class="col-lg-4 fw-bold text-muted">Conditions</label>
+                                                    
+                                                    <!--end::Label-->
+                                                    <!--begin::Col-->
+                                                   
                                                         <span class="fw-bolder fs-6 text-gray-800">{{vehicules.conditions.nom}}</span>
-                                                    </div>
+                                                
                                              </div>
                                             
-                                             </div>
+                                             
+                                             <div class="col mb-4">
+                                                <!--begin::Label-->
+                                            
+                                                <label class="col-lg-4 fw-bold text-muted">Stock</label>
+                                                <!--end::Label-->
+                                                <!--begin::Col-->
+                                             
+                                                    <span class="fw-bolder fs-6 text-gray-800">{{vehicules.stock}}</span>
+                                          
+                                                <!--end::Col-->
+                                            </div>
 											<!--end::Col-->
 										</div>
 										<!--end::Input group-->
@@ -554,6 +582,7 @@
                                                             {% for galerie in vehicules.galerie %}
                                                             <div>
                                                                 <img src="{{asset('/media/galerie/' ~ galerie.nom )}}" alt="Photo" width="150" >
+                                                               
                                                                 
                                                             </div>
                                                             {% endfor %}
@@ -566,24 +595,24 @@
                                                             
                                                                 <!--begin::Label-->
                                                                 <!--begin::Label-->
-                                                                <div class="row ">
-                                                                    <div class="col mb-6">
-                                                                        <label class="col-lg-8 fw-bold text-muted">Disponible Financement</label>
+                                                                <div class="row mb-12">
+                                                                    <div class="col-6">
+                                                                        <label class="col-lg-6 fw-bold text-muted">Disponible Financement</label>
                                                                             {% if vehicules.disponiblefinance == 1 %}
-                                                                            <span class="fw-bolder fs-8 text-gray-800">Oui</span>
+                                                                            <span class="fw-bolder fs-6 text-gray-800">Oui</span>
                                                                             {% else %}
-                                                                            <span class="fw-bolder fs-8 text-gray-800">Non</span>
+                                                                            <span class="fw-bolder fs-6 text-gray-800">Non</span>
                                                                             {% endif %}
                                                                         </div>	
-                                                                        <div class="col mb-6">
+                                                                        <div class="col-6">
                                                                             <!--begin::Label-->
-                                                                                <label class="col-lg-8 fw-bold text-muted">Financement</label>
+                                                                                <label class="col-lg-4 fw-bold text-muted">Financement</label>
                                                                                 
                                                                                 <!--end::Label-->
                                                                                 <!--begin::Col-->
-                                                                                <div class="col-lg-8">
+                                                                              
                                                                                     <span class="fw-bolder fs-6 text-gray-800">{{vehicules.financement}}</span>
-                                                                                </div>
+                                                                            
                                                                         </div>
                                                                     </div>
                                                                 </div>    
@@ -591,9 +620,9 @@
                                                         
                                                         <!--begin::Label-->
                                                         <!--begin::Label-->
-                                                        <div class="row ">
+                                                        <div class="row mb-12">
                                                             <div class="col mb-6">
-                                                                <label class="col-lg-8 fw-bold text-muted">Disponible Garentie</label>
+                                                                <label class="col-lg-4 fw-bold text-muted">Disponible Garentie</label>
                                                                     {% if vehicules.disponiblegarentie == 1 %}
                                                                     <span class="fw-bolder fs-8 text-gray-800">Oui</span>
                                                                     {% else %}
@@ -601,15 +630,15 @@
                                                                     {% endif %}
                                                                     
                                                                 </div>
-                                                                <div class="col mb-6">
+                                                                <div class="col-6">
                                                                     <!--begin::Label-->
-                                                                        <label class="col-lg-8 fw-bold text-muted">Garentie</label>
+                                                                        <label class="col-lg-4 fw-bold text-muted">Garentie</label>
                                                                         
                                                                         <!--end::Label-->
                                                                         <!--begin::Col-->
-                                                                        <div class="col-lg-8">
-                                                                            <span class="fw-bolder fs-8 text-gray-800">{{vehicules.garentie}}</span>
-                                                                        </div>
+                                                                        
+                                                                            <span class="fw-bolder fs-6 text-gray-800">{{vehicules.garentie}}</span>
+                                                                       
                                                                 </div>
                                                           
                                                             </div>    
