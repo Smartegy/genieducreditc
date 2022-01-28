@@ -45,7 +45,12 @@ d'un partenaire{% endblock %}
 										<!--begin::Menu-->
 										<div class="menu menu-lg-rounded menu-column menu-lg-row menu-state-bg menu-title-gray-700 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-400 fw-bold my-5 my-lg-0 align-items-stretch" id="#kt_header_menu" data-kt-menu="true">
 											<div class="menu-item me-lg-1">
+												
+												{% if isModification %}
+												<h1>Modifier Véhicule</h1>
+												{% else %}
 												<h1>Ajouter Véhicule</h1>
+												{% endif %}
 											</div>
 											
 										</div>
@@ -210,7 +215,12 @@ d'un partenaire{% endblock %}
 				<div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
 					<!--begin::Card title-->
 					<div class="card-title m-0">
-						<h3 class="fw-bolder m-0">Ajout Véhicule</h3>
+						{% if isModification %}
+						<h3 class="fw-bolder m-0">Modifier Véhicule</h3>
+												{% else %}
+												<h3 class="fw-bolder m-0">Ajout Véhicule</h3>
+												{% endif %}
+						
 					</div>
 					<!--end::Card title-->
 				</div>
@@ -433,15 +443,27 @@ d'un partenaire{% endblock %}
 											
 							</div>
 							
-							<div class="row mb-12">
+							<div class="row mb-8">
 								<div class="col mb-4">
 													
 									{{ form_label(form.annee, "Ajouter Année :", {'label': {'class':"col-lg-6 col-form-label required fw-bold fs-6"}}) }}
 									
-									<div class="col-lg-2 fv-row fv-plugins-icon-container">
+									<div class="col-lg-4 fv-row fv-plugins-icon-container">
 										{{ form_widget(form.annee, {'attr': {'class': 'form-control form-control-lg form-control-solid'}}) }}
 									</div>
 								</div>
+								
+								<div class="col mb-4">
+												
+									{{ form_label(form.numinventaire, "	Numéro de l'inventaire:", {'label_attr': {'class':"col-lg-6 col-form-label required fw-bold fs-4"}}) }}
+									
+									<div class="col-lg-8 fv-row fv-plugins-icon-container">
+										{{ form_widget(form.numinventaire, {'attr': {'class': 'form-control form-control-lg form-control-solid'}}) }}
+									</div>
+								</div>
+								
+								
+								
 						    </div>
 							
 							<span><h4>Media</h4></span>	
@@ -455,6 +477,15 @@ d'un partenaire{% endblock %}
 									{{ form_widget(form.media, {'attr': {'class': 'form-control form-control-lg form-control-solid'}}) }}
 								</div>
 							</div>
+							{% if isModification %}
+								<h2>Photo Principale</h2>
+							
+								<div>
+									<img src="{{asset('/media/logos/' ~ vehicules.media.nom )}}" alt="Photo-Principale" width="150" >
+									<a href="{{path('delete_image', {id: vehicules.media.id}) }}" data-delete data-token="{{ csrf_token('delete' ~ vehicules.media.id) }}">Supprimer</a>
+								</div>
+								
+							{% endif %}
 						
 							<div class="col mb-4">
 													
@@ -464,6 +495,15 @@ d'un partenaire{% endblock %}
 									{{ form_widget(form.galerie, {'attr': {'class': 'form-control form-control-lg form-control-solid'}}) }}
 								</div>
 							</div>
+							{% if isModification %}
+								<h2>Galerie</h2>
+								{% for galerie in vehicules.galerie %}
+								<div>
+									<img src="{{asset('/media/galerie/' ~ galerie.nom )}}" alt="Photo" width="150" >
+									<a href="{{path('galerie_delete_image', {id: galerie.id}) }}" data-delete data-token="{{ csrf_token('delete' ~ galerie.id) }}">Supprimer</a>
+								</div>
+								{% endfor %}
+							{% endif %}
 							
 						<div class="row mb-12"> <span><h4>Options</h4></span>
 	                     <div class="card-body border-top p-9" class="card-header border-0 cursor-pointer" class="collapse show"></div>
@@ -1257,3 +1297,6 @@ d'un partenaire{% endblock %}
 						</div>
 						</div>
 		{% endblock %}
+		{% block javascripts %}
+    <script src="{{ asset('js/images.js') }}"></script>
+{% endblock %}

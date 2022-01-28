@@ -46,6 +46,7 @@ class VehiculeType extends AbstractType
         $builder
             ->add('stock')
             ->add('vin')
+            ->add('numinventaire') 
             ->add('actif')
             ->add('km')
             ->add('Couleurexterieur')
@@ -160,7 +161,8 @@ class VehiculeType extends AbstractType
                 'allow_delete'      => true,
                 'by_reference'      => false,
                 'required'          => false,
-                'label'             => false,
+               'label'             => false,
+               
             ))
      
 

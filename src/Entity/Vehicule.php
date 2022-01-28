@@ -494,6 +494,11 @@ class Vehicule
      */
     private $galerie;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $numinventaire;
+
   
 
     
@@ -1644,6 +1649,18 @@ class Vehicule
                 $galerie->setVehicule(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNuminventaire(): ?int
+    {
+        return $this->numinventaire;
+    }
+
+    public function setNuminventaire(int $numinventaire): self
+    {
+        $this->numinventaire = $numinventaire;
 
         return $this;
     }

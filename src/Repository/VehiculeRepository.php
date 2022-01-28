@@ -45,8 +45,19 @@ class VehiculeRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult()
         ;
+    }*/
+
+ public function findOneById($value): ?Vehicule
+    {
+        return $this->createQueryBuilder('vehicule')
+            ->andWhere('vehicule.id = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
     }
-    */
+
+
 
 
     
