@@ -97,29 +97,29 @@ class VehiculeController extends AbstractController
 
                    
 
-                    [$photogaleriefile = $photogalerie->getImageFile()];
+                    $photogaleriefile = $photogalerie->getImageFile();
                   
                     //Ajouter le nom
-                   [$photogalerienom= $photogaleriefile->getClientOriginalName()];
+                   $photogalerienom= $photogaleriefile->getClientOriginalName();
                   
 
                     //Déplacer le fichier
-                   [$photogalerielien = '/media/galerie/'.$photogalerienom];
-                    [$photogaleriefile->move('../public/media/galerie', $photogalerienom)];
+                   $photogalerielien = '/media/galerie/'.$photogalerienom;
+                    $photogaleriefile->move('../public/media/galerie', $photogalerienom);
 
                    
 
-                    [$photogalerie ->setNom($photogalerienom)];
-                    [$photogalerie ->setLien($photogalerielien)];
+                    $photogalerie ->setNom($photogalerienom);
+                    $photogalerie ->setLien($photogalerielien);
 
                    
 
                     //Ajoute le type du média
                   
-                        [$type = $repository->gettype('galerie')];
+                        $type = $repository->gettype('galerie');
                       
                         
-                        [$photogalerie->setType($type)];
+                        $photogalerie->setType($type);
                     
                     
                        
@@ -133,7 +133,7 @@ class VehiculeController extends AbstractController
 
 
                 //Récupère l'image
-            $media = $form->getData()->getMedia();
+              $media = $form->getData()->getMedia();
              if ($media){
                 //Récupère le fichier image
                 $mediafile = $form->getData()->getMedia()->getImageFile();
