@@ -20,8 +20,11 @@ use Symfony\Component\HttpFoundation\Request;
 class FabriquantController extends AbstractController
 {
 
-    public function __construct(ObjectManager $om){
+
+    public function __construct(ObjectManager $om, FabriquantRepository $fabriquantRepository){
         $this->om = $om;
+        $this->fabriquantRepository = $fabriquantRepository;
+
     }
 
 
@@ -48,7 +51,7 @@ class FabriquantController extends AbstractController
     }
 
 
-    #[Route('/fabriquant/{id}', name: 'modification_fabriquant', methods:'GET|POST')]
+    #[Route('/fabriquant-mofification/{id}', name: 'modification_fabriquant', methods:'GET|POST')]
     public function modification(Fabriquant $fabriquants = null, TypemediaRepository $repository, Request $request)
     {
 
@@ -101,8 +104,8 @@ class FabriquantController extends AbstractController
         }
         return $this->render('fabriquant/modificationetajoutFabriquant.html.twig', [
             'fabriquant' => $fabriquants,
-            'form' => $form->createView(),
-            'isModification' => $fabriquants->getId() !== null
+            'form' => $form->createView()
+            //'isModification' => $fabriquants->getId() !== null
         ]);
     }
 
@@ -159,17 +162,17 @@ class FabriquantController extends AbstractController
         }
         return $this->render('fabriquant/modification.html.twig', [
             'fabriquant' => $fabriquants,
-            'form' => $form->createView(),
-            'isModification' => $fabriquants->getId() !== null
+            'form' => $form->createView()
+           // 'isModification' => $fabriquants->getId() !== null
         ]);
     }
 
     #[Route('/consultation-fabriquant/{id}', name: 'consultation_fabriquant', methods:'GET|POST')]
-    public function consultation(FabriquantRepository $repository,Fabriquant $fabriquant): Response
+    public function consultation(Fabriquant $fabriquant): Response
     {
 
 
-        $fabriquant = $repository ->findOneById ($fabriquant->getId());
+        $fabriquant = $this->fabriquantRepository->findOneById($fabriquant->getId());
 
 
         return $this->render('fabriquant/consultation.html.twig', [

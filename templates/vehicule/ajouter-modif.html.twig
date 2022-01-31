@@ -482,7 +482,7 @@ d'un partenaire{% endblock %}
 							
 								<div>
 									<img src="{{asset('/media/logos/' ~ vehicules.media.nom )}}" alt="Photo-Principale" width="150" >
-									<a href="{{path('delete_image', {id: vehicules.media.id}) }}" data-delete data-token="{{ csrf_token('delete' ~ vehicules.media.id) }}">Supprimer</a>
+									
 								</div>
 								
 							{% endif %}
@@ -500,7 +500,7 @@ d'un partenaire{% endblock %}
 								{% for galerie in vehicules.galerie %}
 								<div>
 									<img src="{{asset('/media/galerie/' ~ galerie.nom )}}" alt="Photo" width="150" >
-									<a href="{{path('galerie_delete_image', {id: galerie.id}) }}" data-delete data-token="{{ csrf_token('delete' ~ galerie.id) }}">Supprimer</a>
+									
 								</div>
 								{% endfor %}
 							{% endif %}

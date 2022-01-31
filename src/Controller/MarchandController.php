@@ -74,7 +74,7 @@ class MarchandController extends AbstractController
     }
 
 
-    #[Route('/marchand/{id}', name: 'modification_marchand', methods:'GET|POST')]
+    #[Route('/marchand-modif/{id}', name: 'modification_marchand', methods:'GET|POST')]
     public function modification(Marchand $marchand = null, TypemediaRepository $repository, Request $request)
     {
 
@@ -112,7 +112,7 @@ class MarchandController extends AbstractController
         }
 
         
-        $form = $this->createForm(MarchandType::class, $marchand);
+        $form = $this->createForm(MarchandType::class, $marchand)->remove("password");
 
 
         //On recupere le concessmarchand
@@ -131,11 +131,16 @@ class MarchandController extends AbstractController
         
         $form -> handleRequest($request);
 
-       
-       
 
-      
         if($form->isSubmitted() && $form->isValid()){
+
+
+            $modif = $marchand->getId() !== null;
+
+            $om->persist($marchand);
+            $om->flush();
+            $this->addFlash("success", ($modif) ? "La modification a été effectuée" : "L'ajout a été effectuée");
+            return $this->redirectToRoute("marchand");
 
             $vendeurs =$form->get('concessionnairemarchand')->get('vendeurs')->getData();
            
@@ -171,8 +176,8 @@ class MarchandController extends AbstractController
             return $this->redirectToRoute("marchand");
         }
         
-        return $this->render('marchand/modificationetajoutmarchand.html.twig', [
-            'marchands' => $marchand,
+        return $this->render('marchand/modificationmarchand.html.twig', [
+            'marchand' => $marchand,
             'medias'=>$medias,
             'form' => $form->createView(),
             'isModification' => $marchand->getId() !== null,
@@ -182,7 +187,7 @@ class MarchandController extends AbstractController
     }
 
     #[Route('/marchand/creation', name: 'creation_marchand')]
-    public function ajout_modification(Marchand $marchand = null, TypemediaRepository $repository, Request $request)
+    public function ajout_modification(Marchand $marchand = null, TypemediaRepository $repository, UserPasswordHasherInterface $userPasswordHasher, Request $request)
     {
 
 
@@ -238,11 +243,18 @@ class MarchandController extends AbstractController
 
         $form -> handleRequest($request);
 
-
+        $user= new Utilisateur();
 
 
 
         if($form->isSubmitted() && $form->isValid()){
+
+            // encode the plain password
+            $marchand->getConcessionnairemarchand()->getUtilisateur()->setPassword(
+                $userPasswordHasher->hashPassword($user,
+                    $form->get('concessionnairemarchand')->get('utilisateur')->get('password')->getData()
+                )
+            );
 
             $vendeurs =$form->get('concessionnairemarchand')->get('vendeurs')->getData();
 
@@ -278,7 +290,9 @@ class MarchandController extends AbstractController
             return $this->redirectToRoute("marchand");
         }
 
-        return $this->render('marchand/modificationetajoutmarchand.html.twig', [
+
+
+        return $this->render('marchand/ajoutmarchand.html.twig', [
             'marchands' => $marchand,
             'medias'=>$medias,
             'form' => $form->createView(),
@@ -299,7 +313,8 @@ class MarchandController extends AbstractController
         $agents = $this->AgentRepository-> fillAgentsbyConcessionnairemarchand($concessmarchandvalue->getId());
 //On récupère la liste des vendeurs qui sont liés au concessionnairemarchand
         $vendeurs = $this->AgentRepository-> fillVendeursbyConcessionnairemarchand($concessmarchandvalue->getId());
-        //var_dump($agents);die();
+        //var_dump($marchand);die();
+
         return $this->render('marchand/consultation.html.twig', [
             'marchand' => $marchand,
             'vendeurs' => $vendeurs,
@@ -340,7 +355,7 @@ class MarchandController extends AbstractController
             $objectManager->persist($user);
             $objectManager->flush();
 
-            return $this->redirectToRoute("concessionnaire");
+            return $this->redirectToRoute("marchand");
 
 
         }

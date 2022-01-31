@@ -37,8 +37,7 @@ class PartenaireController extends AbstractController
         ]);
     }
     #[Route('/partenaire/creation', name: 'creation_partenaire')]
-    #[Route('/partenaire/{id}', name: 'modification_partenaire', methods:'GET|POST')]
-    public function ajout_modification(Partenaire $partenaire = null, ObjectManager $objectManager, Request $request)
+    public function ajout_partenaire(Partenaire $partenaire = null, ObjectManager $objectManager, Request $request)
     {
      
         if(!$partenaire){
@@ -95,6 +94,66 @@ class PartenaireController extends AbstractController
             
         ]);
     }
+
+    #[Route('/partenaire/{id}', name: 'modification_partenaire', methods:'GET|POST')]
+    public function modification_partenaire(Partenaire $partenaire = null, ObjectManager $objectManager, Request $request)
+    {
+
+        if(!$partenaire){
+            $partenaire = new Partenaire();
+
+        }
+        $om=$this->om;
+
+
+
+
+        $form = $this->createForm(PartenaireType::class, $partenaire);
+
+        //On recupere le partenaire
+        $partenaire = $form->getData();
+
+        if($partenaire != null){
+            //On recupere les vendeurs liés au Partenaire
+            $prtnrs = $this->AgentRepository->findVendeurbyPartenaire($partenaire->getId());
+
+            //On ajoute les valeurs selected dans la select list Vendeurs
+            $form->get('vendeurs')->setData($prtnrs);
+
+        }
+        $form -> handleRequest($request);
+        // $vendeurs = $form->getData('vendeurs');
+        //($vendeurs);
+
+        // dd($vendeurs);
+        if($form->isSubmitted() && $form->isValid()){
+            $vendeurs =$form->get('vendeurs')->getData();
+            //Ajoute la liste des vendeurs (non mapped)
+            //Ajoute la liste des vendeurs (unmapped)
+            foreach ($vendeurs as $vendeur){
+                $partenaire->addAgent($vendeur);
+            }
+            $vendeurvalue = $form->get('vendeurs')->getData();
+            if($vendeurvalue != null){
+                $ven = $this->AgentRepository->fillVendeur($vendeurvalue->getId());
+                $form->get('vendeurs')->setData($ven);
+            }
+
+
+
+            $objectManager->persist($partenaire);
+            $objectManager->flush();
+            return $this->redirectToRoute("partenaire");
+        }
+
+        return $this->render('partenaire/modificationPartenaire.html.twig', [
+            'partenaires' => $partenaire,
+            'form' => $form->createView(),
+            'isModification' => $partenaire->getId() !== null,
+
+        ]);
+    }
+
     #[Route('/consulter-partenaire/{id}', name: 'consultation_partenaire', methods:'GET|POST')]
  public function consultation(Partenaire $partenaire): Response
  {

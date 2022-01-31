@@ -67,7 +67,7 @@ class VehiculeController extends AbstractController
     #[Route('/add-vehicule', name: 'add_vehicule')]
     public function ajouter(Vehicule $vehicules = null,TypemediaRepository $repository,Request $request)
     {
-
+    
        if(!$vehicules){
 
             $vehicules = new Vehicule();
@@ -77,16 +77,17 @@ class VehiculeController extends AbstractController
          
             
            
-
-           if ($vehicules->getGalerie()->isEmpty()) {
-                $image = new GalerieVehicule();
-                $image->setVehicule($vehicules);  
-                $vehicules->getGalerie()->add($image);
-           }
+           
+                if ($vehicules->getGalerie()->isEmpty()) {
+                        $image = new GalerieVehicule();
+                        $image->setVehicule($vehicules);  
+                        $vehicules->getGalerie()->add($image);
+                }
+            
             
             $form = $this->createForm(VehiculeType::class,$vehicules);
             $form -> handleRequest($request);
-          
+        
            
             if($form->isSubmitted() && $form->isValid()){
                
@@ -170,7 +171,7 @@ class VehiculeController extends AbstractController
              
         }
 
-        
+     
       
         return $this->render('vehicule/ajouter-modif.html.twig', [
             

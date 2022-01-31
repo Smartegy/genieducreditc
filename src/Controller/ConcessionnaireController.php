@@ -8,6 +8,8 @@ use App\Entity\Medias;
 use App\Entity\Utilisateur;
 use App\Form\ConcessionnairemarchandType;
 use App\Form\ConcessionnaireType;
+use App\Form\EditConcessionnairemarchandType;
+use App\Form\EditConcessionnaireType;
 use App\Form\SecConcessionnaireMarchandType;
 use App\Form\SecConcessionnaireType;
 use App\Form\SecUtilisateurType;
@@ -78,7 +80,7 @@ class ConcessionnaireController extends AbstractController
 
 
     #[Route('/concessionnaire_modification/{id}', name: 'modification_concessionnaire', methods:'GET|POST')]
-    public function ajout_modification(Concessionnaire $concessionnaires = null, TypemediaRepository $repository, Request $request)
+    public function ajout_modification( Concessionnaire $concessionnaires = null, TypemediaRepository $repository, Request $request)
     {
 
      
@@ -115,8 +117,10 @@ class ConcessionnaireController extends AbstractController
         }
 
         
-        $form = $this->createForm(ConcessionnaireType::class, $concessionnaires);
-
+        $form = $this->createForm(EditConcessionnaireType::class, $concessionnaires)->remove("password");
+       
+        
+         
 
         //On recupere le concessmarchand
         $concessvalue = $form->get('concessionnairemarchand')->getData();
@@ -172,9 +176,11 @@ class ConcessionnaireController extends AbstractController
            $this->om->persist($concessionnaires);
             $om->flush();
             return $this->redirectToRoute("concessionnaire");
+          
         }
+          
         
-        return $this->render('concessionnaire/modification.html.twig', [
+        return $this->render('concessionnaire/modificationConcessionnaire.html.twig', [
             'concessionnaire' => $concessionnaires,
             'medias'=>$medias,
             'form' => $form->createView(),
@@ -198,7 +204,7 @@ class ConcessionnaireController extends AbstractController
         $om=$this->om;
 
 
-        $medias = new Medias();
+        //$medias = new Medias();
 
 
 
@@ -221,7 +227,7 @@ class ConcessionnaireController extends AbstractController
         }
 
 
-        $form = $this->createForm(ConcessionnaireType::class, $concessionnaires);
+        $form = $this->createForm(EditConcessionnairemarchandType::class, $concessionnaires);
 
 
 
@@ -242,20 +248,49 @@ class ConcessionnaireController extends AbstractController
             }
 
 
-            //Ajoute le type du média
+            
+            $media = $form->get('concessionnairemarchand')->getData()->getMedia();
+           
+            if ($media) {
+                //Récupère le fichier image
+                $mediafile = $form->get('concessionnairemarchand')->getData()->getMedia()->getImageFile();
+                
+                //Ajouter le nom
+                $name = $mediafile->getClientOriginalName();
+                
+                //Déplacer le fichier
+                $lien = '/media/logos/'.$name;
+                
+                $mediafile->move('../public/media/logos', $name);
+               
+                //Définit les valeurs
+                $media->setNom($name);
+                $media->setLien($lien);
 
+
+
+
+                //Ajoute le type du média
             $type = $repository->gettype('photo');
+             
+            $media->setType($type);
+            }
+           
+            ////////
 
-            $medias->setType($type);
+           
+
+
 
             $this->om->persist($concessionnaires);
+           
             $om->flush();
             return $this->redirectToRoute("concessionnaire");
         }
 
-        return $this->render('concessionnaire/modificationetajoutConcessionnaire.html.twig', [
+        return $this->render('concessionnaire/ajoutConcessionnaire.html.twig', [
             'concessionnaire' => $concessionnaires,
-            'medias'=>$medias,
+           // 'medias'=>$medias,
             'form' => $form->createView(),
             'isModification' => $concessionnaires->getId() !== null,
             // On passe le tableau cree plus haut en param
@@ -268,12 +303,18 @@ class ConcessionnaireController extends AbstractController
     #[Route('/consulter-concessionnaire/{id}', name: 'consultation_concessionnaire', methods:'GET|POST')]
     public function consultation(Concessionnaire $concessionnaire): Response
     {
-
-
         $concessionnaire = $this->ConcessionnaireRepository->findOneById($concessionnaire->getId());
-        $agents = $this->AgentRepository-> fillAgentsbyConcessionnairemarchand($concessionnaire->getId());
-        // dd($agents);
-        $vendeurs = $this->AgentRepository-> fillVendeursbyConcessionnairemarchand($concessionnaire->getId());
+       
+        $concessionnairemarchand = $concessionnaire->getConcessionnairemarchand();
+       
+        
+        $agents = $this->AgentRepository-> fillAgentsbyConcessionnairemarchand($concessionnairemarchand->getId());
+        
+        $vendeurs = $this->AgentRepository-> fillVendeursbyConcessionnairemarchand($concessionnairemarchand->getId());
+        
+         
+         // dd($vendeurs);
+        
         return $this->render('concessionnaire/consultation.html.twig', [
             'concessionnaire' => $concessionnaire,
             'vendeurs' => $vendeurs,
@@ -322,7 +363,7 @@ class ConcessionnaireController extends AbstractController
 
 
 
-        return $this->render('concessionnaire/security.html.twig', [
+        return $this->render('concessionnaire/securityConcessionnaire.html.twig', [
             'utilisateur' => $user,
             'form' => $form->createView()
 

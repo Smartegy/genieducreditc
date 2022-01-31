@@ -27,9 +27,24 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
+/**
+ * Require ROLE_ADMIN for all the actions of this controller
+ *
+ * @IsGranted("IS_AUTHENTICATED_FULLY")
+ */
 class AdministrateurController extends AbstractController  
 {
+    public function __construct(AdministrateurRepository $administrateurRepository,
+
+    )
+    {
+        $this->AdministrateurRepository = $administrateurRepository;
+
+    }
+
+
     #[Route('/administrateur', name: 'administrateur')]
     public function index(AdministrateurRepository $repository): Response
     {
@@ -49,69 +64,16 @@ class AdministrateurController extends AbstractController
     #[Route('/delete-administrateur/{id}', name: 'delete_product', methods:'delete')]
     public function suppression(Administrateur $administrateurs, Request $request,ObjectManager $objectManager){
 
-  
-        if($this->isCsrfTokenValid("SUP". $administrateurs->getId(),$request->get('_token'))){
+        // $id = $request->get('id');
+        // dd($id);die();
+      //  if($this->isCsrfTokenValid("SUP". $administrateurs->getId(),$request->get('_token'))){
             $objectManager->remove($administrateurs);
             $objectManager->flush();
             return $this->redirectToRoute("administrateur");
-        }
+      //  }
     }
 
- /*
-  #[Route('/add-administrateur', name: 'create')]
-  public function ajout(Administrateur $administrateurs = null, ObjectManager $objectManager,UserPasswordHasherInterface $userPasswordHasher, Request $request)
-  {
-            if(!$administrateurs){
 
-                $administrateurs = new Administrateur();
-                
-                            }
-
-            
-            $form = $this->createForm(AdministrateurType::class,$administrateurs);
-
-            $form -> handleRequest($request);
-
-            
-            $user= new Utilisateur();
-
-        //$user->getPassword( $form->get('utilisateur')->get('plainPassword')->getData());
-        
-        //dd($form->getData());
-        
-        if($form->isSubmitted() && $form->isValid()){
-            
-                            // encode the plain password
-                            $administrateurs->getUtilisateur()->setPassword(
-                                $userPasswordHasher->hashPassword(
-                                        $user,
-                                        $form->get('utilisateur')->get('password')->getData()
-                                    )
-                                );
-                            
-                        
-                        
-                        $objectManager->persist($administrateurs);
-                        $objectManager->flush();
-                        
-                        return $this->redirectToRoute("administrateur");
-                    
-                    
-            
-            }
-            
-            //dd($form->get('utilisateur')->get('plainPassword')->getData());
-        // dd((string) $form->getErrors(true, false));die;
-        // dd($form->getData());
-            
-            return $this->render('administrateur/index.html.twig', [
-                'administrateurs' => $administrateurs,
-                'form' => $form->createView()
-                
-            
-            ]);
-    }
-*/
 
  
   #[Route('/add-administrateur', name: 'add_administrateur')]
@@ -140,7 +102,11 @@ class AdministrateurController extends AbstractController
     if($form->isSubmitted() && $form->isValid()){
        
                         // encode the plain password
-                        
+                            $administrateurs->getUtilisateur()->setPassword(
+                                $userPasswordHasher->hashPassword($user,
+                        $form->get('utilisateur')->get('password')->getData()
+            )
+        );
                         
                     $modif = $administrateurs->getId() !== null;
                     
@@ -152,9 +118,7 @@ class AdministrateurController extends AbstractController
                
       
       }
-      //dd($form->get('utilisateur')->get('plainPassword')->getData());
-     // dd((string) $form->getErrors(true, false));die;
-    // dd($form->getData());
+
       
       return $this->render('administrateur/modificationetajoutAdministrateur.html.twig', [
           'administrateurs' => $administrateurs,
@@ -163,7 +127,7 @@ class AdministrateurController extends AbstractController
       ]);
     }
 
-    #[Route('/modify-administrateur/{id}', name: 'modify_administrateur', methods:'GET|POST')]
+    #[Route('/modify-administrateur/{id}', name: 'modification_administrateur', methods:'GET|POST')]
     public function modification(Administrateur $administrateurs = null, ObjectManager $objectManager,UserPasswordHasherInterface $userPasswordHasher, Request $request)
    {
                 if(!$administrateurs)
@@ -226,58 +190,46 @@ class AdministrateurController extends AbstractController
 
 
         #[Route('/secure-administrateur/{id}', name: 'secure_administrateur', methods:'GET|POST')]
-        public function secure(Administrateur $administrateurs = null,UserPasswordHasherInterface $userPasswordHasher, ObjectManager $objectManager, Request $request)
+        public function secure(UserPasswordHasherInterface $userPasswordHasher, ObjectManager $objectManager, Request $request, $id)
         {
-        
-                    if(!$administrateurs){
 
-                        $administrateurs = new Administrateur();
-                        
-                                    }
+            $admin = $this->AdministrateurRepository->findOneById($id);
 
-                    
-                    $form = $this->createForm(SecAdministrateurType::class,$administrateurs)->remove('password');
+            $user= $admin->getUtilisateur();
+            $form = $this->createForm(SecUtilisateurType::class,$user);
+            $form -> handleRequest($request);
 
-                    $form -> handleRequest($request);
 
-                    
-                    $user= new Utilisateur();
 
-                //$user->getPassword( $form->get('utilisateur')->get('plainPassword')->getData());
-                
-                //dd($form->getData());
-                
-                if($form->isSubmitted() && $form->isValid()){
-                    
-                                    // encode the plain password
-                                    $administrateurs->getUtilisateur()->setPassword(
-                                        $userPasswordHasher->hashPassword(
-                                                $user,
-                                                $form->get('utilisateur')->get('password')->getData()
-                                            )
-                                        );
-                                    
-                                
-                                
-                                $objectManager->persist($administrateurs);
-                                $objectManager->flush();
-                               
-                                return $this->redirectToRoute("administrateur");
-                            
-                    
-                    }
-                    
-                    //dd($form->get('utilisateur')->get('plainPassword')->getData());
-                // dd((string) $form->getErrors(true, false));die;
-               // dd($form->getData($form->get('utilisateur')->get('password')->getData()));
-                    
-                return $this->render('administrateur/Security.html.twig', [
-                    'administrateurs' => $administrateurs,
-                    'form' => $form->createView()
-                    
-                
-                ]);
-        
+            if($form->isSubmitted() && $form->isValid()){
+
+
+                // encode the plain password
+                $user->setPassword(
+                    $userPasswordHasher->hashPassword(
+                        $user,
+                        $form->get('password')->getData()
+                    )
+                );
+
+
+
+                $objectManager->persist($user);
+                $objectManager->flush();
+
+                return $this->redirectToRoute("administrateur");
+
+
+            }
+
+
+
+            return $this->render('administrateur/security.html.twig', [
+                'utilisateur' => $user,
+                'form' => $form->createView()
+
+
+            ]);
 
         }
 }

@@ -645,7 +645,7 @@
 
 											</a>
 
-													<a href="{{path("add_administrateur")}}" style="color:#ffffff;">Ajouter</a>
+													<a href="{{path("add_administrateur")}}">Ajouter</a>
 												<!--end::Svg Icon-->
                                                   
 											   </button>
@@ -731,10 +731,10 @@
 										<table id="kt_datatable_example_5" class="table table-striped table-row-bordered gy-5 gs-7 border rounded">
 											<thead>
 												<tr class="fw-bolder fs-6 text-gray-800 px-7">
-													<th class="min-w-125px sorting" style="width: 180px;">Nom</th>
-													<th class="min-w-125px sorting" style="width: 180px;">Courriel</th>
-													<th class="min-w-125px sorting" style="width: 180px;">Télephone</th>
-													<th class="min-w-125px sorting" style="width: 125px;">Action</th>
+													<th class="min-w-125px sorting">Nom</th>
+													<th class="min-w-125px sorting">Courriel</th>
+													<th class="min-w-125px sorting">Télephone</th>
+													<th class="min-w-125px sorting" >Action</th>
 													
 												</tr>
 											</thead>
@@ -767,17 +767,19 @@
 																		<!--end::Svg Icon-->
 																	</a>
 																	
-																 
+																	<form  method="POST" style="display:inline-block"   action="{{path('delete_product', {'id' : administrateur.id})}}"    onsubmit="return">
+																		
+																	
+																	 
 																		   
 																	   
 																		
-																	
-											
-											
-										<a href="#"data-bs-toggle="modal" data-bs-target="#kt_modal_1" data-bs-id="{{ administrateur.id }}" class="deleteuser">
+																		<input type="hidden" name="_method" value="delete">
+																		<input type="hidden" name="_token" value="{{csrf_token('SUP' ~ administrateur.id)}}">
 																		
 																		
-												
+																		<a href="#"data-bs-toggle="modal" data-bs-target="#kt_modal_1">
+																		<!--begin::Svg Icon | path: icons/duotune/general/gen027.svg-->
 																		<span class="svg-icon svg-icon-3">
 																			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
 																				<path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="black" />
@@ -804,7 +806,15 @@
 																									</div>
 																						
 																									<div class="modal-body">
-																									
+																										<p>Voulez-vous vraiment supprimer <span><b>{{administrateur.utilisateur.Nom}}</b></span></p>
+																									</div>
+																						
+																									<div class="modal-footer">
+																										<form  method="POST" style="display:inline-block"   action="{{path('delete_product', {'id' : administrateur.id})}}"  ></form>
+																										<button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+																										<button type="submit"  class="btn btn-primary">Supprimer</button>
+																									</form>
+																									</div>
 																								</div>
 																							</div>
 																						</div>
@@ -924,38 +934,5 @@
   ">"
 });
 </script>
-
-<script type="text/javascript">
-
-$(document).ready(function(){
-        $(".deleteuser").click(function () {
-            var id = this.getAttribute('data-bs-id');
-            	var form = "<form  method='POST' style='display:inline-block'   action='{{path('delete_product', {'id' :  'id1'})}}' >";
-            	form = form.replace("id1", id);
-            	var input = "<input type='hidden' name='_token' value='{{csrf_token('SUP' ~ 'id1')}}'>";
-            	input = input.replace('id1', id);
-            	
-            	var str = "<p>Voulez-vous vraiment supprimer cet utilisateur <span><b></b></span></p>"+
-            		"</div>"+
-            		"<div class='modal-footer'>"+
-            		form + 
-            		"<input type='hidden' name='_method' value='delete'>"+
-					input+
-            		"<button type='button' class='btn btn-light' data-bs-dismiss='modal'>Annuler</button>"+
-					"<button type='submit'  class='btn btn-primary'>Supprimer</button>"+
-            		
-            		"</form>"+
-            		"</div>"
-					;
-																										
-            
-            $("#kt_modal_1 .modal-body").html(str);
-         
-        });
-        
- });
-    </script>
-  
-    
-</body>
+	</body>
 {% endblock %}

@@ -2,6 +2,7 @@
 namespace App\Controller;
 use App\Entity\Agent;
 use App\Entity\Utilisateur;
+use App\Form\SecUtilisateurType;
 use App\Repository\AgentRepository;
 use App\Form\AgentType;
 use App\Form\EditAgentType;
@@ -14,6 +15,14 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 class AgentController extends AbstractController
 {
+
+    public function __construct(AgentRepository $agentRepository,
+
+    )
+    {
+        $this->AgentRepository = $agentRepository;
+
+    }
     #[Route('/agent', name: 'agent')]
     public function index(AgentRepository $repository): Response
     {
@@ -85,55 +94,50 @@ class AgentController extends AbstractController
      ]);
  }
  #[Route('/secure-agent/{id}', name: 'secure_agent', methods:'GET|POST')]
- public function secure(Agent $agent = null,UserPasswordHasherInterface $userPasswordHasher, ObjectManager $objectManager, Request $request)
+ public function secure(UserPasswordHasherInterface $userPasswordHasher, ObjectManager $objectManager, Request $request, $id)
  {
- 
-             if(!$agent){
-                 $agent = new Agent();
-                 
-                             }
-             
-             $form = $this->createForm(SecAgentType::class,$agent)->remove('password');
-             $form -> handleRequest($request);
-             
-             $user= new Utilisateur();
-         
-         
-         //dd($form->getData());
-         
-         if($form->isSubmitted() && $form->isValid()){
-            
-             
-                             // encode the plain password
-                             $agent->getUtilisateur()->setPassword(
-                                 $userPasswordHasher->hashPassword(
-                                         $user,
-                                         $form->get('utilisateur')->get('password')->getData()
-                                     )
-                                 );
-                             
-                         
-                         
-                         $objectManager->persist($agent);
-                         $objectManager->flush();
-                        
-                         return $this->redirectToRoute("agent");
-                     
-             
-             }
-             
-             //dd($form->get('utilisateur')->get('plainPassword')->getData());
-         // dd((string) $form->getErrors(true, false));die;
-        // dd($form->getData($form->get('utilisateur')->get('password')->getData()));
-             
-         return $this->render('agent/Security.html.twig', [
-             'agent' => $agent,
-             'form' => $form->createView()
-             
-         
-         ]);
- 
+
+     $agen = $this->AgentRepository->findOneById($id);
+
+     $user= $agen->getUtilisateur();
+     $form = $this->createForm(SecUtilisateurType::class,$user);
+     $form -> handleRequest($request);
+
+
+
+     if($form->isSubmitted() && $form->isValid()){
+
+
+         // encode the plain password
+         $user->setPassword(
+             $userPasswordHasher->hashPassword(
+                 $user,
+                 $form->get('password')->getData()
+             )
+         );
+
+
+
+         $objectManager->persist($user);
+         $objectManager->flush();
+
+         return $this->redirectToRoute("agent");
+
+
+     }
+
+
+
+     return $this->render('agent/security.html.twig', [
+         'utilisateur' => $user,
+         'form' => $form->createView()
+
+
+     ]);
+
  }
+ 
+
  #[Route('/modify-agent/{id}', name: 'modify_agent', methods:'GET|POST')]
  public function modification(Agent $agent = null, ObjectManager $objectManager,UserPasswordHasherInterface $userPasswordHasher, Request $request)
 {
